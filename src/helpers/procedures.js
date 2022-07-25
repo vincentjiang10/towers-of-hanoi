@@ -1,6 +1,4 @@
-// Contains helper functions for checking valid moves, winning conditions, and animation logic
-
-// TODO: include algorithm for animating solution according to procedure
+// Contains helper functions for checking valid moves and winning conditions
 
 // checks whether a move is valid
 export const isValidMove = (gameState, procedure, from, to) => {
@@ -11,7 +9,7 @@ export const isValidMove = (gameState, procedure, from, to) => {
 	);
 }
 
-// check if a move follows common rule (larger disc cannot be stacked on top of a smaller one)
+// check if a move follows common rule (larger disk cannot be stacked on top of a smaller one)
 const commonCheck = (gameState, from, to) => {
 	const radius = gameState[from].at(-1);
 	const toTower = gameState[to];
@@ -30,24 +28,24 @@ const adjacentCheck = (from, to) => {
 }
 
 // checks for winning condition
-export const winCondition = (procedure, numDiscs, sourceTower, destTower) => {
+export const winCondition = (procedure, numDisks, sourceTower, destTower) => {
 	return procedure === 1 ? 
-		bicolorWinCondition(numDiscs, sourceTower, destTower) : 
-		commonWinCondition(numDiscs, destTower);
+		bicolorWinCondition(numDisks, sourceTower, destTower) : 
+		commonWinCondition(numDisks, destTower);
 }
 
-// checks for common win condition (all discs at destTower)
-const commonWinCondition = (numDiscs, destTower) => 
-	destTower && destTower.length === numDiscs;
+// checks for common win condition (all disks at destTower)
+const commonWinCondition = (numDisks, destTower) => 
+	destTower && destTower.length === numDisks;
 
 // checks for winning condition based on bicolor puzzle rules
 // 1. towers are both monochrome and are at src and dest
-// 2. bottom discs need to be switched
-const bicolorWinCondition = (numDiscs, sourceTower, destTower) => {
+// 2. bottom disks need to be switched
+const bicolorWinCondition = (numDisks, sourceTower, destTower) => {
 	const patternCheck = () => {
 		let isWin = true;
 		sourceTower && sourceTower.forEach((radius, index) => {
-			const compare = (0.7-0.38*index/(numDiscs-1) - (index%2 ? 0 : 0.001));
+			const compare = (0.7-0.38*index/(numDisks-1) - (index%2 ? 0 : 0.001));
 			isWin = isWin && Math.abs(radius - compare) < 0.0001;
 			console.log("compare: " + compare);
 			console.log("radius" + radius);
@@ -58,8 +56,8 @@ const bicolorWinCondition = (numDiscs, sourceTower, destTower) => {
 	return (
 		sourceTower && 
 		destTower &&
-		sourceTower.length === numDiscs &&
-		destTower.length === numDiscs &&
+		sourceTower.length === numDisks &&
+		destTower.length === numDisks &&
 		patternCheck()
 	);
 }

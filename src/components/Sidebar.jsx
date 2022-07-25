@@ -31,7 +31,7 @@ import {
 	RulesTooltip, 
 	ProcedureTooltip,
 	TowerTooltip, 
-	DiscTooltip, 
+	DiskTooltip, 
 	SourceTooltip, 
 	DestTooltip, 
 	ThemeTooltip, 
@@ -41,19 +41,41 @@ import {
 import GameLogic from "./GameLogic";
 
 const Sidebar = ({images, onBackgroundChange}) => {
-	const textures = ["metal", "granite", "wood", "stone"];
-
 	// separate state for rendering options
 	const [collapse, setCollapse] = useState(false);
 	const [procedure, setProcedure] = useState(0);
 	const [numTowers, setNumTowers] = useState(3);
-	const [numDiscs, setNumDiscs] = useState(3);
+	const [numDisks, setNumDisks] = useState(3);
 	const [source, setSource] = useState(0);
 	const [destination, setDestination] = useState(numTowers-1);
+	const textures = ["metal", "granite", "wood", "stone"];
 	const [texture, setTexture] = useState(Math.floor(textures.length * Math.random()));
 	const [animate, setAnimate] = useState(false);
 	const [playRate, setPlayRate] = useState(1);
 	const [src, target] = useSingleton();
+
+	// resets gameState
+	const reset = () => {
+		const delaySet = async (source) => {
+			await new Promise(() => {
+				setTimeout(() => {setSource(source)}, animate ? 1000 : 500);
+			});
+		}
+		// set out of bounds to avoid collision with destination
+		setAnimate(false);
+		setSource(-2);
+		delaySet(source);
+	}
+
+	// rerenders gameState (solution to rendering error when setting Disk positions)
+	useEffect(() => {
+		// TODO: call alert whenever gameState is about to be reset (perhaps insider the function call to reset())
+		reset();
+	}, [numDisks, numTowers, procedure]);
+
+	useEffect(() => {
+		setAnimate(false);
+	}, [source, destination])
 
 	// toggles animate on spacebar
 	window.onkeyup = (event) => {event.code === "Space" && setAnimate(!animate)};
@@ -68,24 +90,6 @@ const Sidebar = ({images, onBackgroundChange}) => {
 		min: 3,
 		max: 7
 	};
-
-	// resets gameState
-	const reset = () => {
-		const delaySet = async (source) => {
-			await new Promise(() => {
-				setTimeout(() => {setSource(source)}, 0)
-			});
-		}
-		// set out of bounds to avoid collision with destination
-		setSource(-2);
-		delaySet(source);
-	}
-
-	// rerenders gameState (solution to rendering error when setting Disc positions)
-	useEffect(() => {
-		// TODO: call alert whenever gameState is about to be reset (perhaps insider the function call to reset())
-		reset();
-	}, [numDiscs, numTowers, procedure]);
 
 	// produces tower item containing tower icons 
 	const towerItem = (dir, set) => (
@@ -164,14 +168,14 @@ const Sidebar = ({images, onBackgroundChange}) => {
 								</div>
 							</SubMenu>
 							<SubMenu 
-								title={<Tippy content={<DiscTooltip />} singleton={target}><div>Number of Discs</div></Tippy>}
+								title={<Tippy content={<DiskTooltip />} singleton={target}><div>Number of Disks</div></Tippy>}
 								icon={<FaGripLines />}
 							>
 								<div className="sliderWrapper" style={{ paddingTop: collapse && 20 }}>
 									<Slider
 										{...sliderProps}
-										value={numDiscs}
-										onChangeCommitted={(_, newVal) => {setNumDiscs(newVal)}}
+										value={numDisks}
+										onChangeCommitted={(_, newVal) => {setNumDisks(newVal)}}
 									/>
 								</div>
 							</SubMenu>
@@ -222,6 +226,8 @@ const Sidebar = ({images, onBackgroundChange}) => {
 									onClick={(event) => {
 										collapse && event.target === event.currentTarget && setAnimate(false)
 									}}
+									// solution animation only available for numTowers === 3
+									style={numTowers > 3 ? {pointerEvents: "none", opacity: "0.4"} : {}}
 								>
 									<span>Play Rate</span>
 									<div className="sliderWrapper">
@@ -242,7 +248,11 @@ const Sidebar = ({images, onBackgroundChange}) => {
 								</SubMenu>
 								:
 								// if !animate, render icon only
-								<MenuItem icon={<FaPlay />} onClick={() => {setAnimate(true)}}>
+								<MenuItem 
+									icon={<FaPlay />} 
+									onClick={() => {setAnimate(true)}} 
+									style={numTowers > 3 ? {pointerEvents: "none", opacity: "0.4"} : {}}
+								>
 									<Tippy content={<AnimateTooltip />} singleton={target}><div>Animate</div></Tippy>
 								</MenuItem>
 							}
@@ -284,7 +294,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 				<GameLogic
 					procedure={procedure}
 					numTowers={numTowers} 
-					numDiscs={numDiscs} 
+					numDisks={numDisks} 
 					source={source} 
 					destination={destination}
 					texture={textures[texture]}

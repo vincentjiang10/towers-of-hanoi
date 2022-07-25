@@ -4,12 +4,13 @@ import { Canvas } from "@react-three/fiber";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { PerspectiveCamera } from "@react-three/drei";
 import { winCondition } from "../helpers/procedures";
-import Disc from "./game/Disc";
+import getAnimationSteps from "../helpers/animation";
+import Disk from "./game/Disk";
 import Tower from "./game/Tower";
 
-const GameLogic = ({ procedure, numTowers, numDiscs, source, destination, texture, animate }) => {
+const GameLogic = ({ procedure, numTowers, numDisks, source, destination, texture, animate, playRate }) => {
   // gameState is an array whose elements represent individual tower states
-  // maintained as an array, similating stack, of Disc sizes (unique identifier)
+  // maintained as an array, similating stack, of Disk sizes (unique identifier)
   const [gameState, setGameState] = useState([]);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
@@ -18,55 +19,57 @@ const GameLogic = ({ procedure, numTowers, numDiscs, source, destination, textur
   const [winSound] = useSound(`${path}win.mp3`);
   const [sound] = useSound(`${path}${texture}.mp3`);
   const numRenders = useRef(0);
+  // animationSteps will be an array containing steps in the form [from, to] 
+  const animationSteps = useRef([[]]);
+  // set to 0 whenever play is called and increments by one after each animation step when animate === true
+  const animationIndex = useRef(0);
 
   // resets gameState
   useEffect(() => {
-    // initial disc state (ordered least to small)
-    const initDiscs = [...Array(numDiscs)].map((_, index) => 0.7-0.38*index/(numDiscs-1));
+    // initial disk state (ordered least to small)
+    const initDisks = [...Array(numDisks)].map((_, index) => 0.7-0.38*index/(numDisks-1));
     // initial game state
     const initGameState = [...Array(numTowers)].map((_, index) => 
-      index === source ? initDiscs : 
+      index === source ? initDisks : 
       (
         // bicolor procedure check
         procedure === 1 && 
         (source < numTowers-1 ? index === source+1 : index === numTowers-2)
       )
-      ? initDiscs.map(x => x-0.001) : []
+      ? initDisks.map(x => x-0.001) : []
     );
     // TODO dropDown animation
     setGameState(initGameState);
-  }, [numDiscs, source, numTowers, procedure]);
+  }, [numDisks, source, numTowers, procedure]);
 
   // click sound effect played upon sidebar state change
   useEffect(() => {numRenders.current++ < 3 || click()}, 
-    [procedure, texture, animate, click]);
+    [procedure, texture, animate, destination, click]);
 
-  // check for winning state in gameState after gameState mutation
+  // gameState mutation effects
   useEffect(() => {
+    // update animation information
+    animate && animationIndex.current++;
+    if (!animate) animationSteps.current = getAnimationSteps(procedure, gameState, numDisks, destination);
     // TODO: import from Modal.jsx
     const winModal = () => {
 
     }
-    winCondition(procedure, numDiscs, gameState[source], gameState[destination]) ? 
-      winSound() && winModal() : sound();
-  }, [gameState, numDiscs, destination]);
+    // checking for win condition
+    winCondition(procedure, numDisks, gameState[source], gameState[destination]) ? 
+      winSound() && winModal() : 
+      (animate && animationIndex.current <= 2) || sound();
+  }, [gameState]);
 
   // solution animation
   useEffect(() => {
-    // will need to input args, possible: gameState, source, destination, procedure
-    // animation will be in effects.js, which calls on procedures.js for checks and solution algorithm
+    if (!animate) animationIndex.current = 0;
     // if animate, call play() with args of current gameState, else call pause()
     // animate ? play() : pause()
-    // calling pause will bring disc back to original position before leave
+    // calling pause will bring disk back to original position before leave
   }, [animate]);
 
-  // Don't forget to return removeEventListener if needed
-  useEffect(() => {
-
-  }, []);
-
   // --- Positioning ---
-
   // spacing
   const space = 17 / (numTowers+1);
 
@@ -89,9 +92,8 @@ const GameLogic = ({ procedure, numTowers, numDiscs, source, destination, textur
     setScreenHeight(window.innerHeight);
   }
 
-  // --- methods passed as Disc props ---
-
-  // gameState mutation (called by Disc components)
+  // --- Methods passed as Disk props ---
+  // gameState mutation (called by Disk components)
   const changeGameState = (from, to) => {
     // identity
     const newState = gameState.map(x => x);
@@ -102,8 +104,14 @@ const GameLogic = ({ procedure, numTowers, numDiscs, source, destination, textur
 
   // path to load texture maps
   const toUrl = (type) => `${process.env.PUBLIC_URL}/assets/textures/${texture}/${type}.png`;
+  
+  // --- Animation ---
+  // current animation step
+  const animationStep = animationSteps.current[animationIndex.current];
+  const from = animationStep ? animationStep[0] : -1;
+  const to = animationStep ? animationStep[1] : -1;
 
-  // display the discs and towers acoording to gameState
+  // display the disks and towers acoording to gameState
   return (
     <>
       <div className="content">
@@ -120,25 +128,26 @@ const GameLogic = ({ procedure, numTowers, numDiscs, source, destination, textur
                   key={index}
                   position={[width(-8.1, index), -1, 0]} 
                   toUrl={toUrl}
-                  numDiscs={numDiscs}
+                  numDisks={numDisks}
                 />
               )
             }
           </group>
-          {/* Disc rendering (dependent on gameState) */
-            // TODO: add dropDown animation
+          {/* Disk rendering (dependent on gameState) */
             gameState.map((tower, towerIndex) => 
               <group key={towerIndex} scale={scale}>
-                {tower.map((radius, discIndex) => 
-                  <Disc
+                {tower.map((radius, diskIndex) => 
+                  <Disk
                     key={radius}
                     gameState={gameState}
                     changeGameState={changeGameState}
+                    playRate={playRate}
+                    animateTo={animate && diskIndex === tower.length-1 && towerIndex === from ? to : -1}
                     scale={scale}
-                    numDiscs={numDiscs}
+                    numDisks={numDisks}
                     space={space}
                     towerIndex={towerIndex}
-                    position={[width(-8.1, towerIndex), -2 - numDiscs/14 + 0.4*(discIndex+1), 0]}
+                    position={[width(-8.1, towerIndex), -2 - numDisks/14 + 0.4*(diskIndex+1), 0]}
                     radius={radius}
                     toUrl={toUrl}
                     procedure={procedure}

@@ -6,7 +6,7 @@
 /**
  *  1. Introduction message
  *    - what this app does (it's purpose) : be quick!!
- *    - how to use this app? (How to move the discs)
+ *    - how to use this app? (How to move the disks)
  *  2. Signing in features 
  *    - talk about what features are available on sign-in: best-time, # of moves, other stats
  *  3. Quick slide on features

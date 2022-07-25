@@ -6,13 +6,13 @@ import { useGesture } from "@use-gesture/react";
 import { useSpring, a } from "@react-spring/three";
 import { isValidMove } from "../../helpers/procedures";
 
-const Disc = ({ gameState, changeGameState, scale, numDiscs, space, towerIndex, position, radius, toUrl, procedure }) => {
+const Disk = ({ gameState, changeGameState, playRate, animateTo, scale, numDisks, space, towerIndex, position, radius, toUrl, procedure }) => {
   // current tower state
   const towerState = gameState[towerIndex];
   // height of current tower
-  const height = scale*(1.2*numDiscs/7)
-  // is this the topmost disc?
-  const isTop = towerState === undefined ? false : towerState.at(-1) === radius;
+  const height = scale*(1.2*numDisks/7); 
+  // is this the topmost disk?
+  const isTop = towerState === undefined ? false : towerState.at(-1) === radius; 
 
   // finds nearest tower index (1-indexed)
   const findTowerIndex = (currPos) => {
@@ -62,18 +62,18 @@ const Disc = ({ gameState, changeGameState, scale, numDiscs, space, towerIndex, 
       // translation
       mx += position[0]
       my -= position[1]
-      // is topmost disc in tower?
+      // is topmost disk in tower?
       isTop && -my <= height && set({
         position: [
           findTower(spring.position), 
-          Math.max(-my, -2 - numDiscs/14 + 0.4*
+          Math.max(-my, -2 - numDisks/14 + 0.4*
             (gameState[withinBoundary(findTowerIndex(spring.position) - 1)].length + 1)), 
           0
         ] 
       });
       // rotation within tower
       const withRotation = () => {set({ rotation: [Math.PI/2, 0, -mx / radius**3 / 10] })};
-      // only topmost disc out of tower has no rotation
+      // only topmost disk out of tower has no rotation
       isTop && -my > height && isTop ? set({ position: [mx, -my, 0] }) : withRotation();
     },
     onPointerUp: (state) => {
@@ -81,33 +81,45 @@ const Disc = ({ gameState, changeGameState, scale, numDiscs, space, towerIndex, 
     }
   });
 
+  // delays setting new state until after animation
+  const delaySet = async (towerIndex, to) => {
+    await new Promise(() =>  {
+      setTimeout(() => {changeGameState(towerIndex, to)}, 550);
+    });
+  }
+
   // potential gameState mutation
   const handlePointerUp = (event) => {
-    // stop propagation to other components
-    event.stopPropagation();
-    // index of tower disc will move to (0-indexed)
+    event.stopPropagation(); // stop propagation to other components
+    // index of tower disk will move to (0-indexed)
     const to = withinBoundary(findTowerIndex(spring.position) - 1);
+    // valid move effect
     const valid = () => {
-      // delays setting new state until after animation
-      const delaySet = async (towerIndex, to) => {
-        await new Promise(() =>  {
-          setTimeout(() => {changeGameState(towerIndex, to)}, 500)
-        });
-      }
       set({ 
-        position: [(to+1)*space - 8.1, -2 - numDiscs/14 + 0.4*(gameState[to].length+1), 0],
+        position: [(to+1)*space - 8.1, -2 - numDisks/14 + 0.4*(gameState[to].length+1), 0],
         rotation: [Math.PI/2, 0, 0]
       });
       delaySet(towerIndex, to);
     }
+    // invalid move effect
     const invalid = () => {
-      // TODO: set fading alert message / modal (called from Modal.jsx)
+      // TODO: set fading alert message / modeless (called from Modal.jsx)
       set({ position: position });
     }
     isValidMove(gameState, procedure, towerIndex, to) ? valid() : invalid();
-    // release pointer capture
-    event.target.releasePointerCapture(event.pointerId);
+    event.target.releasePointerCapture(event.pointerId); // release pointer capture
   };
+
+  // animation step 
+  const animateMove = (to) => {
+    set({ 
+      position: [(to+1)*space - 8.1, -2 - numDisks/14 + 0.4*(gameState[to].length+1), 0],
+      rotation: [Math.PI/2, 0, 0]
+    });
+    delaySet(towerIndex, to);
+  }
+  // call to animate if animateTo !== -1
+  animateTo !== -1 && animateMove(animateTo);
 
   // loading texture maps
   const textureProps = useTexture({
@@ -142,18 +154,19 @@ const Disc = ({ gameState, changeGameState, scale, numDiscs, space, towerIndex, 
 	  bevelSegments: 7
   };
   
-  // intial disc index (used by Bicolor procedure to set color)
-  const discIndex = (numDiscs - 1)*(0.7 - radius)/0.38;
-  const round = Math.round(discIndex);
-  // add 1 to disc with similar discIndex (to reverse parity, and therefore color)
-  const bicolorIndex = Math.abs(round - discIndex) < 0.001 ? round : round+1;
+  // intial disk index (used by Bicolor procedure to set color)
+  const diskIndex = (numDisks - 1)*(0.7 - radius)/0.38;
+  const round = Math.round(diskIndex);
+  // add 1 to disk with similar diskIndex (to reverse parity, and therefore color)
+  const bicolorIndex = Math.abs(round - diskIndex) < 0.001 ? round : round+1;
 
 	return (
     <a.mesh {...spring} {...bind()}>
       <extrudeBufferGeometry args={[circle, extrudeSettings]} />
       <meshPhysicalMaterial 
-        {...textureProps}  
-        color={procedure === 1 ? 
+        {...textureProps}
+        color={
+          procedure === 1 ? 
           (bicolorIndex%2 === 0 ? "LightBlue" : "Cyan") : 
           "LightCyan" 
         }
@@ -163,4 +176,4 @@ const Disc = ({ gameState, changeGameState, scale, numDiscs, space, towerIndex, 
   );
 }
 
-export default Disc;
+export default Disk;
