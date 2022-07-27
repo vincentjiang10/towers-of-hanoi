@@ -6,7 +6,20 @@ import { useGesture } from "@use-gesture/react";
 import { useSpring, a } from "@react-spring/three";
 import { isValidMove } from "../../helpers/procedures";
 
-const Disk = ({ gameState, changeGameState, playRate, animateTo, scale, numDisks, space, towerIndex, position, radius, toUrl, procedure }) => {
+const Disk = ({ 
+  gameState, 
+  changeGameState, 
+  playRate, 
+  animateTo, 
+  scale, 
+  numDisks, 
+  space, 
+  towerIndex, 
+  position, 
+  radius, 
+  toUrl, 
+  procedure 
+}) => {
   // current tower state
   const towerState = gameState[towerIndex];
   // height of current tower
@@ -82,9 +95,9 @@ const Disk = ({ gameState, changeGameState, playRate, animateTo, scale, numDisks
   });
 
   // delays setting new state until after animation
-  const delaySet = async (towerIndex, to) => {
+  const delaySet = async (towerIndex, to, update) => {
     await new Promise(() =>  {
-      setTimeout(() => {changeGameState(towerIndex, to)}, 550);
+      setTimeout(() => {changeGameState(towerIndex, to, update)}, 600);
     });
   }
 
@@ -99,7 +112,7 @@ const Disk = ({ gameState, changeGameState, playRate, animateTo, scale, numDisks
         position: [(to+1)*space - 8.1, -2 - numDisks/14 + 0.4*(gameState[to].length+1), 0],
         rotation: [Math.PI/2, 0, 0]
       });
-      delaySet(towerIndex, to);
+      delaySet(towerIndex, to, true);
     }
     // invalid move effect
     const invalid = () => {
@@ -116,7 +129,7 @@ const Disk = ({ gameState, changeGameState, playRate, animateTo, scale, numDisks
       position: [(to+1)*space - 8.1, -2 - numDisks/14 + 0.4*(gameState[to].length+1), 0],
       rotation: [Math.PI/2, 0, 0]
     });
-    delaySet(towerIndex, to);
+    delaySet(towerIndex, to, false);
   }
   // call to animate if animateTo !== -1
   animateTo !== -1 && animateMove(animateTo);

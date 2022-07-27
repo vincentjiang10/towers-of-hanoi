@@ -11,4 +11,5 @@
  *    - talk about what features are available on sign-in: best-time, # of moves, other stats
  *  3. Quick slide on features
  *    - hovering over items will produce popUp (modeless) after 1 second delay
+ *    - animation supports frequent pause and play: feel free to switch between animation and manual dragging
  */

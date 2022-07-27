@@ -2,8 +2,7 @@
 // play and pause functions should create side effects to screen (a fading play or pause icon)
 
 // get animation steps (every move should be valid)
-const getAnimationSteps = (procedure, gameState, numDisks, destination) => {
-  const initDisks = [...Array(numDisks)].map((_, index) => 0.7-0.38*index/(numDisks-1))
+const getAnimationSteps = (procedure, gameState, initDisks, destination) => {
   const diskPositions = new Array(initDisks.length);
   // replace initDisks (with ordered disk radii) with disk positions based on gameState
   // index represents disk number ranked from least to largest
