@@ -9,7 +9,7 @@ export const ProcedureTooltip = ({ procedure }) =>
   <p>
     <b>Rules:</b> <br />
     <b>1.</b> Larger disks cannot be placed on top of smaller disks <br />
-    <b>2.</b> Only one disk can be moved at the time, a topmost disk at a tower <br />
+    <b>2.</b> Only one disk can be moved at the time, the topmost disk at a tower <br />
     <br />
     <b>Objectives:</b> <br />
     <b>1.</b> Move all disks from the source (<FaChevronUp />) tower to the destination (<FaChevronDown />) tower
@@ -18,7 +18,7 @@ export const ProcedureTooltip = ({ procedure }) =>
   <p>
     <b>Rules:</b> <br />
     <b>1.</b> Larger disks cannot be placed on top of smaller disks (Same size disks can) <br />
-    <b>2.</b> Only one disk can be moved at the time, a topmost disk at a tower <br />
+    <b>2.</b> Only one disk can be moved at the time, the topmost disk at a tower <br />
     <br />
     <b>Objectives:</b> <br />
     <b>1.</b> Separate the total number of disks evenly, half on the source (<FaChevronUp />) tower and half on the destination (<FaChevronDown />) tower <br />
@@ -28,7 +28,7 @@ export const ProcedureTooltip = ({ procedure }) =>
   <p>
     <b>Rules:</b> <br />
     <b>1.</b> Larger disks cannot be placed on top of smaller disks <br />
-    <b>2.</b> Only one disk can be moved at the time, a topmost disk at a tower <br />
+    <b>2.</b> Only one disk can be moved at the time, the topmost disk at a tower <br />
     <b>3.</b> In a single move, a disk can only be moved to an adjacent tower <br />
     <br />
     <b>Objectives:</b> <br />

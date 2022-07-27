@@ -45,7 +45,7 @@ const GameLogic = ({
 
   // click sound effect played upon sidebar state change
   useEffect(() => {numRenders.current++ < 2 || click()}, 
-  [procedure, texture, animate, destination, click]);
+  [procedure, texture, animate, destination, playRate, click]);
 
   // resets gameState
   useEffect(() => {

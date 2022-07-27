@@ -97,7 +97,7 @@ const Disk = ({
   // delays setting new state until after animation
   const delaySet = async (towerIndex, to, update) => {
     await new Promise(() =>  {
-      setTimeout(() => {changeGameState(towerIndex, to, update)}, 600);
+      setTimeout(() => {changeGameState(towerIndex, to, update)}, 600 / playRate);
     });
   }
 

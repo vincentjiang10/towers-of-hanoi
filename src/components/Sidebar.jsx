@@ -89,8 +89,10 @@ const Sidebar = ({images, onBackgroundChange}) => {
 
 	// handles pause
 	const handlePause = () => {
-		setCurrStep(0);
-		setAnimate(false);
+		if (animate) {
+			setCurrStep(0);
+			setAnimate(false);
+		}
 	}
 
 	// toggles animate on spacebar
@@ -121,7 +123,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 			await new Promise(() => {
 				setTimeout(() => {
 					setMovesDisabled(false);
-				}, 700);
+				}, 750 / playRate);
 			});
 		}
 		setMovesDisabled(true);
@@ -178,7 +180,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 							<SubMenu 
 								title={<Tippy content={<RulesTooltip />} singleton={target}><div>Rules and Variants</div></Tippy>}
 								icon={<IoMdMore size="1.5em" />}
-								onClick={() => {setAnimate(false)}}
+								onClick={handlePause}
 							>
 								{procedures.map((option, index) => 
 									<MenuItem
@@ -203,7 +205,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 							<SubMenu 
 								title={<Tippy content={<TowerTooltip />} singleton={target}><div>Number of Towers</div></Tippy>}
 								icon={<FaGripLinesVertical />}
-								onClick={() => {setAnimate(false)}}
+								onClick={handlePause}
 							>
 								<div className="sliderWrapper" 
 									style={{ 
@@ -226,7 +228,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 							<SubMenu 
 								title={<Tippy content={<DiskTooltip />} singleton={target}><div>Number of Disks</div></Tippy>}
 								icon={<FaGripLines />}
-								onClick={() => {setAnimate(false)}}
+								onClick={handlePause}
 							>
 								<div className="sliderWrapper" 
 									style={{ 
@@ -245,7 +247,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 							<SubMenu 
 								title={<Tippy content={<SourceTooltip />} singleton={target}><div>Source Tower</div></Tippy>} 
 								icon={<FaChevronUp />}
-								onClick={() => {setAnimate(false)}}
+								onClick={handlePause}
 							>
 								{towerItem(source, setSource)}
 							</SubMenu>
@@ -253,7 +255,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 							<SubMenu 
 								title={<Tippy content={<DestTooltip />} singleton={target}><div>Destination Tower</div></Tippy>}
 								icon={<FaChevronDown />}
-								onClick={() => {setAnimate(false)}}
+								onClick={handlePause}
 							>
 								{towerItem(destination, setDestination)}
 							</SubMenu>
@@ -261,11 +263,15 @@ const Sidebar = ({images, onBackgroundChange}) => {
 							<SubMenu 
 								title={<Tippy content={<ThemeTooltip />} singleton={target}><div>Theme</div></Tippy>}
 								icon={<AiFillPicture />}
+								onClick={handlePause}
 							>
 								{images.map((image, index) => 
 									<MenuItem className="themeItem" 
 										key={image} 
-										style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/assets/images/${images[index]}.jpg)` }} 
+										style={{ 
+											backgroundImage: `url(${process.env.PUBLIC_URL}/assets/images/${images[index]}.jpg)`,
+											...opaque(animate)
+										}} 
 										onClick={() => {onBackgroundChange(index)}}
 									>		
 										{image[0].toUpperCase() + image.substring(1)}
@@ -276,61 +282,58 @@ const Sidebar = ({images, onBackgroundChange}) => {
 							<SubMenu 
 								title={<Tippy content={<MaterialTooltip />} singleton={target}><div>Material</div></Tippy>}
 								icon={<AiTwotoneEdit />}
+								onClick={handlePause}
 							>
 								{textures.map((image, index) => 
 									<MenuItem className="materialItem"
 										key={image}
-										style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/assets/textures/${textures[index]}/preview.jpg)` }}
+										style={{ 
+											backgroundImage: `url(${process.env.PUBLIC_URL}/assets/textures/${textures[index]}/preview.jpg)`,
+											...opaque(animate) 
+										}}
 										onClick={() => {setTexture(index)}}
 									/>
 								)}
 							</SubMenu>
-
-							{animate ? 
-								// if animate, attach additional menuItem containing rate slider
-								<SubMenu 
-									title={<Tippy content={<AnimateTooltip />} singleton={target}><div>Animate</div></Tippy>}
-									icon={<FaPause onClick={handlePause} />}
-									// only responds to clicking parent component (seen as icon) upon collapsed sidebar
-									onClick={(event) => {
-										collapse && event.target === event.currentTarget && handlePause();
-									}}
-									// solution animation only available for numTowers === 3
-									style={opaque(numTowers > 3)}
-								>
-									<span>Play Rate</span>
-									<div className="sliderWrapper">
-										<Slider
-											getAriaValueText={(value) => value}
-											value={playRate < 1 ? 2-1/playRate: playRate}
-											step={0.01}
-											min={0}
-											max={2}
-											// slider values goes from 0 (mapping to 50%) all the way to 2 (mapping to 200%)
-											marks={[{value: 0, label: <span style={{ color: "#ADADAD" }}>50%</span>}, 
-															{value: 1, label: <span style={{ color: "#ADADAD" }}>100%</span>}, 
-															{value: 2, label: <span style={{ color: "#ADADAD" }}>200%</span>}]}
-											// if newVal is less than 1, then set play rate to 1/(2-newVal), else set to newVal
-											onChangeCommitted={(_, newVal) => {
-												handlePause();
-												setPlayRate(newVal < 1 ? 1/(2-newVal) : newVal);
-											}}
-										/>
-									</div>
-								</SubMenu>
-								:
-								// if !animate, render icon only
-								<SubMenu 
-									title={<Tippy content={<AnimateTooltip />} singleton={target}><div>Animate</div></Tippy>}
-									icon={<FaPlay onClick={() => {setAnimate(true)}} />} 
-									onClick={(event) => {
-										collapse && event.target === event.currentTarget && setAnimate(true);
-									}}
-									style={opaque(numTowers > 3)}
-								>
+							
+							{/* if animate, attach additional menuItem containing rate slider */}
+							<SubMenu 
+								title={<Tippy content={<AnimateTooltip />} singleton={target}><div>Animate</div></Tippy>}
+								icon={animate ? <FaPause onClick={handlePause} /> : <FaPlay onClick={() => setAnimate(true)} />}
+								// solution animation is only available for numTowers === 3
+								style={opaque(numTowers > 3)}
+								// only responds to clicking parent component (seen as icon) upon collapsed sidebar
+								onClick={(event) => {
+									collapse && event.target === event.currentTarget && (animate ? handlePause() : setAnimate(true));
+								}}
+							>
+								<span>Play Rate</span>
+								<div className="sliderWrapper">
+									<Slider
+										getAriaValueText={(value) => value}
+										value={playRate < 1 ? 2-1/playRate: playRate}
+										step={0.01}
+										min={0}
+										max={2}
+										// slider values goes from 0 (mapping to 50%) all the way to 2 (mapping to 200%)
+										marks={[{value: 0, label: <span style={{ color: "#ADADAD" }}>50%</span>}, 
+														{value: 1, label: <span style={{ color: "#ADADAD" }}>100%</span>}, 
+														{value: 2, label: <span style={{ color: "#ADADAD" }}>200%</span>}]}
+										// if newVal is less than 1, then set play rate to 1/(2-newVal), else set to newVal
+										onChangeCommitted={(_, newVal) => {
+											animate && handlePause();
+											setPlayRate(newVal < 1 ? 1/(2-newVal) : newVal);
+										}}
+									/>
+								</div>
+								{/* if !animate, render icon only */} 
+								{animate || 
+								<div>
+									<br />
+									<span>Steps</span>
 									<div className="animateItem">
 										<FaChevronLeft className="arrow" 
-											size="1.7em" 
+											size="1.8em" 
 											style={opaque(movesDisabled)}
 											onClick={() => {
 												if (currStep !== 0) {
@@ -342,7 +345,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 										/>
 										{currStep} / {numMoves.current}
 										<FaChevronRight className="arrow" 
-											size="1.7em" 
+											size="1.8em" 
 											style={opaque(movesDisabled)}
 											onClick={() => {
 												if (currStep !== numMoves.current) {
@@ -353,14 +356,17 @@ const Sidebar = ({images, onBackgroundChange}) => {
 											}}
 										/>
 									</div>
-								</SubMenu>
+								</div>
 							}
+							</SubMenu>
 
 							<MenuItem
 								icon={<FaRedo />}
-								onClick={() => {reset(source)}}
+								onClick={() => {
+									animate ? handlePause() : reset(source);
+								}}
 							>
-								Restart
+								Reset
 							</MenuItem>
 
 							{/* pop up info button: calls on pop up intro function in Modal.jsx */}
@@ -393,7 +399,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 			</ProSidebar>
 
 			{/* passing some state as props to GameLogic */}
-			<div onMouseDown={() => {setAnimate(false)}}>
+			<div onMouseDown={handlePause}>
 				<GameLogic
 					procedure={procedure}
 					numTowers={numTowers} 
