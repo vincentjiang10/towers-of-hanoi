@@ -97,7 +97,7 @@ const Disk = ({
   // delays setting new state until after animation
   const delaySet = async (towerIndex, to, update) => {
     await new Promise(() =>  {
-      setTimeout(() => {changeGameState(towerIndex, to, update)}, 600 / playRate);
+      setTimeout(() => {changeGameState(towerIndex, to, update)}, 600 / (update ? 1 : playRate));
     });
   }
 
@@ -125,10 +125,17 @@ const Disk = ({
 
   // animation step 
   const animateMove = (to) => {
-    set({ 
-      position: [(to+1)*space - 8.1, -2 - numDisks/14 + 0.4*(gameState[to].length+1), 0],
-      rotation: [Math.PI/2, 0, 0]
-    });
+    const delayPosition = async () => {
+      await new Promise(() =>  {
+        setTimeout(() => {
+          set({ 
+            position: [(to+1)*space - 8.1, -2 - numDisks/14 + 0.4*(gameState[to].length+1), 0],
+            rotation: [Math.PI/2, 0, 0]
+          });
+        }, 0);
+      });
+    }
+    delayPosition();
     delaySet(towerIndex, to, false);
   }
   // call to animate if animateTo !== -1
@@ -166,7 +173,7 @@ const Disk = ({
 	  bevelOffset: 0.05,
 	  bevelSegments: 7
   };
-  
+
   // intial disk index (used by Bicolor procedure to set color)
   const diskIndex = (numDisks - 1)*(0.7 - radius)/0.38;
   const round = Math.round(diskIndex);
@@ -181,7 +188,7 @@ const Disk = ({
         color={
           procedure === 1 ? 
           (bicolorIndex%2 === 0 ? "LightBlue" : "Cyan") : 
-          "LightCyan" 
+          `rgb(${Math.round(500*(0.7-radius)) + 30}, ${Math.round(-200*(radius-0.4)) + 200}, 230))`
         }
         attach="material" 
       />

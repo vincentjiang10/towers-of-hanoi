@@ -19,8 +19,8 @@ const getAnimationSteps = (procedure, gameState, initDisks, destination) => {
   (diskPositions[0] === undefined) || 
   (
     procedure === 0 ? standardSteps(animationSteps, diskPositions, destination) :
-    procedure === 1 ? bicolorSteps(animationSteps, gameState, destination) :
-    procedure === 2 ? adjacentSteps(animationSteps, gameState, destination) :
+    procedure === 1 ? bicolorSteps(animationSteps, diskPositions, destination) :
+    procedure === 2 ? adjacentSteps(animationSteps, diskPositions, initDisks.length || -1, destination) :
     alert(false)
   );
 
@@ -66,13 +66,44 @@ const standardSteps = (animationSteps, diskPositions, destination) => {
 }
 
 // recursive solution following bicolor puzzle rules
-const bicolorSteps = (animationSteps, gameState, destination) => {
+const bicolorSteps = (animationSteps, diskPositions, destination) => {
 
 }
 
-// recursive solution following adjacent puzzle rules
-const adjacentSteps = (animationSteps, gameState, destination) => {
 
+// recursive solution following adjacent puzzle rules 
+// solves for the first n discs in diskPositions
+// adapted from: Stack Overflow, July 2022 (https://stackoverflow.com/questions/62235341/solving-tower-of-hanoi-with-given-arrangements) 
+const adjacentSteps = (animationSteps, diskPositions, disksToMove, destination) => {
+  for (let badDisk = disksToMove-1; badDisk >= 0; badDisk--) {
+    const current = diskPositions[badDisk];
+    // find largest disk out of place
+    if (current !== destination) {
+      const aux = 3 - current - destination;
+      if (Math.abs(destination - current) === 2) {
+        // need to move badDisk to aux tower first, so move smaller disks to destination tower
+        adjacentSteps(animationSteps, diskPositions, badDisk, destination); 
+        animationSteps.push([current, aux]); // adjacent move
+        diskPositions[badDisk] = aux;
+        // move smaller disks to current tower
+        adjacentSteps(animationSteps, diskPositions, badDisk, current);
+        // destination tower is now free
+        animationSteps.push([aux, destination]);
+        diskPositions[badDisk] = destination;
+        // move smaller disks back
+        adjacentSteps(animationSteps, diskPositions, badDisk, destination);
+      }
+      else {
+        // move smaller disks out of the way
+        adjacentSteps(animationSteps, diskPositions, badDisk, aux);
+        animationSteps.push([current, destination]); // adjacent move
+        diskPositions[badDisk] = destination;
+        // move smaller disks back
+        adjacentSteps(animationSteps, diskPositions, badDisk, destination);
+      }
+      break;
+    }
+  }
 }
 
 export default getAnimationSteps;

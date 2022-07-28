@@ -329,8 +329,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 								{/* if !animate, render icon only */} 
 								{animate || 
 								<div>
-									<br />
-									<span>Steps</span>
+									<div style={{ padding: "15px 0px 5px" }}>Steps</div>
 									<div className="animateItem">
 										<FaChevronLeft className="arrow" 
 											size="1.8em" 
@@ -363,7 +362,16 @@ const Sidebar = ({images, onBackgroundChange}) => {
 							<MenuItem
 								icon={<FaRedo />}
 								onClick={() => {
-									animate ? handlePause() : reset(source);
+									const delayReset = async () => {
+										await new Promise(() => {
+											setTimeout(() => {reset(source)}, 450);
+										});
+									}
+									if (animate) handlePause();
+									else {
+										reset(source);
+										delayReset();
+									}
 								}}
 							>
 								Reset
