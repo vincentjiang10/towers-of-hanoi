@@ -19,8 +19,8 @@ const getAnimationSteps = (procedure, gameState, initDisks, destination) => {
   (diskPositions[0] === undefined) || 
   (
     procedure === 0 ? standardSteps(animationSteps, diskPositions, destination) :
-    procedure === 1 ? bicolorSteps(animationSteps, diskPositions, destination) :
-    procedure === 2 ? adjacentSteps(animationSteps, diskPositions, initDisks.length || -1, destination) :
+    procedure === 1 ? bicolorSteps(animationSteps, diskPositions, diskPositions.length, destination) :
+    procedure === 2 ? adjacentSteps(animationSteps, diskPositions, diskPositions.length, destination) :
     alert(false)
   );
 
@@ -66,8 +66,14 @@ const standardSteps = (animationSteps, diskPositions, destination) => {
 }
 
 // recursive solution following bicolor puzzle rules
-const bicolorSteps = (animationSteps, diskPositions, destination) => {
-
+const bicolorSteps = (animationSteps, diskPositions, disksToMove, destination) => {
+  // two cases
+  // 1. destination is adjacent to source
+  // 2. destination is 
+  // tip: treat disks in pairs 
+  // Steps:
+  //  - solve swapping bottom disk pairs
+  //  - work on smaller case 
 }
 
 

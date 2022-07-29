@@ -18,7 +18,8 @@ const Disk = ({
   position, 
   radius, 
   toUrl, 
-  procedure 
+  procedure,
+  click
 }) => {
   // current tower state
   const towerState = gameState[towerIndex];
@@ -67,6 +68,7 @@ const Disk = ({
       const event = state.event;
       event.stopPropagation();
       event.target.setPointerCapture(event.pointerId);
+      click();
     },
     onDrag: ({ movement: [mx, my] }) => {
       // scale
@@ -190,7 +192,7 @@ const Disk = ({
           (bicolorIndex%2 === 0 ? "LightBlue" : "Cyan") : 
           `rgb(${Math.round(500*(0.7-radius)) + 30}, ${Math.round(-200*(radius-0.4)) + 200}, 230))`
         }
-        attach="material" 
+        attach="material"
       />
     </a.mesh>
   );

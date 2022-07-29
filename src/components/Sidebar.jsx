@@ -9,6 +9,7 @@ import {
 	SubMenu 
 } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
+import { IntroModal } from "./popUps/Modals";
 import { Slider } from "@mui/material";
 import { IconContext } from "react-icons";
 import { 
@@ -27,8 +28,8 @@ import {
 import { AiOutlineCaretRight, AiFillPicture, AiTwotoneEdit } from "react-icons/ai";
 import { TbTallymark1 } from "react-icons/tb";
 import { IoMdHelp, IoMdMore, IoMdInformationCircleOutline } from "react-icons/io";
-import Tippy, { useSingleton } from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css';
+import Tippy, { useSingleton } from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 import {
 	RulesTooltip, 
 	ProcedureTooltip,
@@ -95,6 +96,26 @@ const Sidebar = ({images, onBackgroundChange}) => {
 		}
 	}
 
+	// cooldown on stepping through moves
+	const setCooldown = () => {
+		const cooldown = async () => {
+			await new Promise(() => {
+				setTimeout(() => {
+					setMovesDisabled(false);
+				}, 750 / playRate);
+			});
+		}
+		setMovesDisabled(true);
+		cooldown();
+	}
+
+	// delays reset
+	const delayReset = async () => {
+		await new Promise(() => {
+			setTimeout(() => {reset(source)}, 450);
+		});
+	}
+
 	// toggles animate on spacebar
 	window.onkeyup = (event) => {event.code === "Space" && setAnimate(!animate)};
 	
@@ -109,25 +130,12 @@ const Sidebar = ({images, onBackgroundChange}) => {
 		max: 7
 	};
 
-	// set components opaque on animate
+	// set components opaque on cond
 	const opaque = (cond) => {
 		return {
 			pointerEvents: cond ? "none" : "all",
 			opacity: cond ? "0.4" : "1"
 		}
-	}
-
-	// cooldown on stepping through moves
-	const setCooldown = () => {
-		const cooldown = async () => {
-			await new Promise(() => {
-				setTimeout(() => {
-					setMovesDisabled(false);
-				}, 750 / playRate);
-			});
-		}
-		setMovesDisabled(true);
-		cooldown();
 	}
 
 	// produces tower item containing tower icons 
@@ -362,11 +370,6 @@ const Sidebar = ({images, onBackgroundChange}) => {
 							<MenuItem
 								icon={<FaRedo />}
 								onClick={() => {
-									const delayReset = async () => {
-										await new Promise(() => {
-											setTimeout(() => {reset(source)}, 450);
-										});
-									}
 									if (animate) handlePause();
 									else {
 										reset(source);
@@ -422,6 +425,10 @@ const Sidebar = ({images, onBackgroundChange}) => {
 					setNumMoves={(moves) => {numMoves.current = moves}}
 					forward={forward}
 				/>
+			</div>
+
+			<div className="introModal">
+				<IntroModal opaque={opaque}/>
 			</div>
 		</>
 	);

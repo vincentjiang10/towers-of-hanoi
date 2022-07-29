@@ -184,6 +184,7 @@ const GameLogic = ({
                     radius={radius}
                     toUrl={toUrl}
                     procedure={procedure}
+                    click={click}
                   />
                 )}
               </group>
