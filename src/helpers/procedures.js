@@ -47,8 +47,6 @@ const bicolorWinCondition = (numDisks, sourceTower, destTower) => {
 		sourceTower && sourceTower.forEach((radius, index) => {
 			const compare = (0.7-0.38*index/(numDisks-1) - (index%2 ? 0 : 0.001));
 			isWin = isWin && Math.abs(radius - compare) < 0.0001;
-			console.log("compare: " + compare);
-			console.log("radius" + radius);
 		});
 		return isWin;
 	}

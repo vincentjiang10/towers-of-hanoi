@@ -43,7 +43,7 @@ import {
 } from "./popUps/Tooltips"
 import GameLogic from "./GameLogic";
 
-const Sidebar = ({images, onBackgroundChange}) => {
+const Sidebar = ({ images, onBackgroundChange, setModal }) => {
 	// separate state for rendering options
 	// game info
 	const [collapse, setCollapse] = useState(false);
@@ -339,29 +339,33 @@ const Sidebar = ({images, onBackgroundChange}) => {
 								<div>
 									<div style={{ padding: "15px 0px 5px" }}>Steps</div>
 									<div className="animateItem">
-										<FaChevronLeft className="arrow" 
-											size="1.8em" 
-											style={opaque(movesDisabled)}
-											onClick={() => {
-												if (currStep !== 0) {
-													setCurrStep(currStep-1);
-													setForward(false);
-													setCooldown();
-												}
-											}}
-										/>
+										<div className="arrow">
+											<FaChevronLeft 
+												size="1.8em" 
+												style={opaque(movesDisabled)}
+												onClick={() => {
+													if (currStep !== 1) {
+														setCurrStep(currStep-1);
+														setForward(false);
+														setCooldown();
+													}
+												}}
+											/>
+										</div>
 										{currStep} / {numMoves.current}
-										<FaChevronRight className="arrow" 
-											size="1.8em" 
-											style={opaque(movesDisabled)}
-											onClick={() => {
-												if (currStep !== numMoves.current) {
-													setCurrStep(currStep+1);
-													setForward(true);
-													setCooldown();
-												}
-											}}
-										/>
+										<div className="arrow">
+											<FaChevronRight
+												size="1.8em" 
+												style={opaque(movesDisabled)}
+												onClick={() => {
+													if (currStep !== numMoves.current) {
+														setCurrStep(currStep+1);
+														setForward(true);
+														setCooldown();
+													}
+												}}
+											/>
+										</div>
 									</div>
 								</div>
 							}
@@ -383,7 +387,10 @@ const Sidebar = ({images, onBackgroundChange}) => {
 							{/* pop up info button: calls on pop up intro function in Modal.jsx */}
 							<MenuItem
 								icon={<IoMdHelp size="1.25em" />}
-								onClick={() => {}}
+								onClick={() => {
+									document.getElementsByClassName("introModal")[0].style.display = "block";
+									setModal(true);
+								}}
 							>
 								Help
 							</MenuItem>
@@ -419,6 +426,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 					destination={destination}
 					texture={textures[texture]}
 					animate={animate}
+					setAnimate={setAnimate}
 					playRate={playRate}
 					currStep={currStep}
 					setCurrStep={setCurrStep}
@@ -428,7 +436,7 @@ const Sidebar = ({images, onBackgroundChange}) => {
 			</div>
 
 			<div className="introModal">
-				<IntroModal opaque={opaque}/>
+				<IntroModal opaque={opaque} setModal={setModal}/>
 			</div>
 		</>
 	);

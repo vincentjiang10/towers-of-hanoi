@@ -2,14 +2,24 @@
 // play and pause functions should create side effects to screen (a fading play or pause icon)
 
 // get animation steps (every move should be valid)
-const getAnimationSteps = (procedure, gameState, initDisks, destination) => {
-  const diskPositions = new Array(initDisks.length);
+const getAnimationSteps = (procedure, gameState, initDisks, source, destination) => {
+  const initDisksCopy = initDisks.map(x => x-0.001);
+  const diskPositions = new Array((procedure !== 1 ? 1 : 2) * initDisks.length);
   // replace initDisks (with ordered disk radii) with disk positions based on gameState
   // index represents disk number ranked from least to largest
   // Ex: [0,0,1] means all disks are on the tower 0 except the largest disk, which is on the tower 1
+  procedure !== 1 ?
   gameState.forEach((tower, towerIndex) => {
     tower.forEach((disk) => {
       const index = initDisks.length - 1 - initDisks.indexOf(disk);
+      diskPositions[index] = towerIndex;
+    })
+  }) :
+  gameState.forEach((tower, towerIndex) => {
+    tower.forEach((disk) => {
+      const index0 = initDisks.indexOf(disk);
+      const index1 = initDisksCopy.indexOf(disk);
+      const index = (initDisks.length - 1 - (index0 + index1 + 1))*2 + (index0 !== -1 ? 1 : 0);
       diskPositions[index] = towerIndex;
     })
   })
@@ -19,10 +29,11 @@ const getAnimationSteps = (procedure, gameState, initDisks, destination) => {
   (diskPositions[0] === undefined) || 
   (
     procedure === 0 ? standardSteps(animationSteps, diskPositions, destination) :
-    procedure === 1 ? bicolorSteps(animationSteps, diskPositions, diskPositions.length, destination) :
+    procedure === 1 ? bicolorSetup(animationSteps, diskPositions, diskPositions.length, source, destination) :
     procedure === 2 ? adjacentSteps(animationSteps, diskPositions, diskPositions.length, destination) :
     alert(false)
   );
+  console.log("");
 
   // first move should hover ([from, from], using first move's from)
   const from = animationSteps[0] ? animationSteps[0][0] : -1;
@@ -31,7 +42,7 @@ const getAnimationSteps = (procedure, gameState, initDisks, destination) => {
 	return animationSteps; 
 }
 
-// iterative solution following standard puzzle rules
+// iterative solution following standard procedure and rules
 // adapted from: Stack Overflow, July 2022 (https://stackoverflow.com/questions/62235341/solving-tower-of-hanoi-with-given-arrangements) 
 const standardSteps = (animationSteps, diskPositions, destination) => {
   const n = diskPositions.length;
@@ -65,20 +76,81 @@ const standardSteps = (animationSteps, diskPositions, destination) => {
   }
 }
 
-// recursive solution following bicolor puzzle rules
-const bicolorSteps = (animationSteps, diskPositions, disksToMove, destination) => {
-  // two cases
-  // 1. destination is adjacent to source
-  // 2. destination is 
-  // tip: treat disks in pairs 
-  // Steps:
-  //  - solve swapping bottom disk pairs
-  //  - work on smaller case 
+// sets up solution animation for bicolor procedure and rules
+const bicolorSetup = (animationSteps, diskPositions, disksToMove, source, destination) => {  // Second option (slower)
+  // converge into a single tower
+  bicolorHelper(animationSteps, diskPositions, disksToMove, 3 - source - destination);
+  bicolorSteps(animationSteps, diskPositions, disksToMove, source, destination);
 }
 
+// recursive solution following bicolor procedure and rules
+// precond: diskToMove disks starting from the smallest has been converged to a single tower that is not source or destination
+// invariant: sorts towers in disk pairs
+const bicolorSteps = (animationSteps, diskPositions, disksToMove, source, destination) => {
+  for (let badDisk = disksToMove-1; badDisk >= 0; badDisk-=2) {
+    if (diskPositions[badDisk] !== destination || diskPositions[badDisk-1] !== destination) {
+      const toDest = diskPositions[badDisk]; // largest out of place disk needed to be moved to destination
+      const toSource = diskPositions[badDisk-1]; // largest out of place disk needed to be moved to source
+      const auxDest = 3 - toDest - destination;
+      const auxSource = 3 - toSource - source;
+      // toDest === toSource (stacked on top of each other)
+      bicolorMove(animationSteps, diskPositions, badDisk-1, badDisk, auxDest, toDest, destination); // move toDest to destination
+      bicolorMove(animationSteps, diskPositions, badDisk-1, badDisk-1, auxSource, toSource, source); // move toSource to source
+      bicolorHelper(animationSteps, diskPositions, badDisk-1, 3 - source - destination);
+      // recurse on smaller case (swap destination and source)
+      bicolorSteps(animationSteps, diskPositions, badDisk-1, destination, source);
+      break;
+    }
+  }
+}
 
-// recursive solution following adjacent puzzle rules 
-// solves for the first n discs in diskPositions
+// helper function for bicolor move
+// moves disk from src to dest tower following bicolor procedure and rules
+const bicolorMove = (animationSteps, diskPositions, disksToMove, diskIndex, aux, src, dest) => {
+  bicolorHelper(animationSteps, diskPositions, disksToMove, aux); // move smaller disks to aux tower
+  animationSteps.push([src, dest]); // move and add to animationSteps
+  diskPositions[diskIndex] = dest; // update diskPositions
+}
+
+// heuristic helper function for stacking bicolor towers 
+// stacks diskToMove number of towers starting from smallest at destination tower
+// precond: diskToMove is even
+const bicolorHelper = (animationSteps, diskPositions, disksToMove, destination) => {
+  for (let badDisk = disksToMove-1; badDisk >= 0; badDisk-=2) {
+    if (diskPositions[badDisk] !== destination || diskPositions[badDisk-1] !== destination) {
+      // stack even number of towers
+      // heuristic algorithm (choose the fastest out of the two ways of moving: first then second, or second then first)
+      const first = diskPositions[badDisk];
+      const second = diskPositions[badDisk-1];
+      const aux1 = 3 - first - destination;
+      const aux2 = 3 - second - destination;
+      if (first !== destination && second === destination) {
+        bicolorMove(animationSteps, diskPositions, badDisk-1, badDisk, aux1, first, destination);
+      }
+      else if (second !== destination && first === destination) {
+        bicolorMove(animationSteps, diskPositions, badDisk-1, badDisk-1, aux2, second, destination);
+      }
+      else {
+        const animationSteps1 = [];
+        const animationSteps2 = [];
+        // add phantom copy of diskPositions to test which sequence of moving disks takes lesser amount of moves
+        bicolorHelper(animationSteps1, diskPositions.map(x => x), badDisk-1, aux1); // move smaller disks to aux1
+        bicolorHelper(animationSteps2, diskPositions.map(x => x), badDisk-1, aux2); // move smaller disks to aux2
+        const isFirstShorter = animationSteps1.length < animationSteps2.length;
+        // chosing option with less amount of moves
+        bicolorMove(animationSteps, diskPositions, badDisk-1, 
+          isFirstShorter ? badDisk : badDisk-1, isFirstShorter ? aux1 : aux2, isFirstShorter ? first : second, destination);
+        bicolorMove(animationSteps, diskPositions, badDisk-1,
+          isFirstShorter ? badDisk-1 : badDisk, isFirstShorter ? aux2 : aux1, isFirstShorter ? second : first, destination);
+      }
+      bicolorHelper(animationSteps, diskPositions, badDisk-1, destination) // set smaller disks to destination
+      break;
+    }
+  }
+}
+
+// recursive solution following adjacent procedure and rules 
+// solves for the first n disks in diskPositions
 // adapted from: Stack Overflow, July 2022 (https://stackoverflow.com/questions/62235341/solving-tower-of-hanoi-with-given-arrangements) 
 const adjacentSteps = (animationSteps, diskPositions, disksToMove, destination) => {
   for (let badDisk = disksToMove-1; badDisk >= 0; badDisk--) {

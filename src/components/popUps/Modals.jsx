@@ -19,9 +19,8 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
  *    - animation supports frequent pause and play: feel free to switch between animation and manual dragging
  */
 
-export const IntroModal = ({ opaque }) => {
+export const IntroModal = ({ opaque, setModal }) => {
   const carousel = useRef(null);
-  const slideIndex = useRef(0);
   const [arrowDisabled, setArrowDisabled] = useState(false);
 
   const setCooldown = () => {
@@ -37,7 +36,7 @@ export const IntroModal = ({ opaque }) => {
   const contentStyle = {
     height: "400px",
     color: "#fff",
-    lineHeight: "200px",
+    lineHeight: "30px",
     textAlign: "center",
     background: "#364d79"
   };
@@ -49,42 +48,76 @@ export const IntroModal = ({ opaque }) => {
   
   return (
     <>
-      <Carousel ref={carousel}>
+      <Carousel ref={carousel} infinite={false}>
         <div>
-          <h3 style={contentStyle}>1</h3>
+          <div style={contentStyle}>
+            <br />
+            <div>Welcome to Towers of Hanoi!</div>
+            <div>
+              Test
+            </div>
+          </div>
         </div>
         <div>
-          <h3 style={contentStyle}>2</h3>
+          <div style={contentStyle}>
+            <br />
+            <div>2</div>
+            <div>
+              Test
+            </div>
+          </div>
         </div>
         <div>
-          <h3 style={contentStyle}>3</h3>
+          <div style={contentStyle}>
+            <br />
+            <div>3</div>
+            <div>
+              Test
+            </div>
+          </div>
         </div>
         <div>
-          <h3 style={contentStyle}>4</h3>
+          <div style={contentStyle}>
+            <br />
+            <div>4</div>
+            <div>
+              Test
+            </div>
+          </div>
         </div>
       </Carousel>
       <FaChevronLeft className="leftArrow" 
         {...arrowStyle} 
         style={opaque(arrowDisabled)}
         onClick={() => {
-          if (slideIndex.current > 0) {
-            carousel.current.prev();
-            slideIndex.current--;
-            setCooldown();
-          }
-        }} 
+          carousel.current.prev();
+          setCooldown();
+        }}
       />
       <FaChevronRight className="rightArrow"
         {...arrowStyle}
         style={opaque(arrowDisabled)}
         onClick={() => {
-          if (slideIndex.current < 3) {
-            carousel.current.next();
-            slideIndex.current++;
-            setCooldown();
-          }
+          carousel.current.next();
+          setCooldown();
         }} 
       />
+      <div className="close" 
+        onClick={() => {
+          const closeModal = async () => {
+            await new Promise(() => {
+              setTimeout(() => {
+                document.getElementsByClassName("introModal")[0].style.display = "none";
+                setModal(false);
+              }, 0);
+            });
+          }
+          carousel.current.goTo(0, true);
+          closeModal();
+        }}
+      >
+        &times;
+      </div>
     </>
   )
 }

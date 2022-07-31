@@ -15,6 +15,20 @@
 	transition: 0.8s ease-in-out;
 }
 
+.close {
+	color: lightseagreen !important;
+	font-size: 20px !important;
+	bottom: 435px;
+	left: max(370px, calc(50vw - 30px));
+	z-index: 2000;
+	position: relative;
+	cursor: default;
+}
+
+.close:hover {
+	color: azure !important;
+}
+
 .content {
 	height: 100vh;
 	width: 100vw;
@@ -57,8 +71,11 @@
 
 .leftArrow {
 	bottom: 220px;
-	z-index: 1700;
 	position: relative;
+}
+
+.leftArrow:hover {
+	color: azure !important;
 }
 
 .materialItem {
@@ -69,22 +86,24 @@
 
 .overlay {
 	position: fixed;
-	display: block;
   height: 100vh;
   width: 100vw; 
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.5); 
+  background-color: rgba(0,0,0,0.3); 
   z-index: 1500;
 }
 
 .rightArrow {
 	bottom: 220px;
 	left: max(345px, calc(50vw - 55px));
-	z-index: 1700;
 	position: relative;
+}
+
+.rightArrow:hover {
+	color: azure !important;
 }
 
 .ruleItem {

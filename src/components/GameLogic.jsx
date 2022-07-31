@@ -16,6 +16,7 @@ const GameLogic = ({
   destination, 
   texture, 
   animate, 
+  setAnimate,
   playRate, 
   currStep,
   setCurrStep,
@@ -42,36 +43,45 @@ const GameLogic = ({
   const animationStepsCopy = useRef([[]]);
   // stores previous move 
   const prevMove = useRef("");
+  // initial game state
+  const initGameState = [...Array(numTowers)].map((_, index) => 
+    index === source ? initDisks : 
+    (
+      // bicolor procedure check
+      procedure === 1 && 
+      (source < numTowers-1 ? index === source+1 : index === numTowers-2)
+    )
+    ? initDisks.map(x => x-0.001) : []
+  );
 
   // click sound effect played upon sidebar state change
-  useEffect(() => {numRenders.current++ < 2 || click()}, 
-  [procedure, texture, animate, destination, playRate, click]);
+  useEffect(() => {numRenders.current++}, [gameState]);
+  useEffect(() => {numRenders.current < 4 || click()}, [procedure, texture, animate, click]);
+  useEffect(() => {currStep <= 0 || click()}, [currStep, click]);
 
   // resets gameState
   useEffect(() => {
-    // initial game state
-    const initGameState = [...Array(numTowers)].map((_, index) => 
-      index === source ? initDisks : 
-      (
-        // bicolor procedure check
-        procedure === 1 && 
-        (source < numTowers-1 ? index === source+1 : index === numTowers-2)
-      )
-      ? initDisks.map(x => x-0.001) : []
-    );
-    // TODO dropDown animation
     setGameState(initGameState);
-    animationStepsCopy.current = getAnimationSteps(procedure, initGameState, initDisks, destination);
+    animationStepsCopy.current = getAnimationSteps(procedure, initGameState, initDisks, source, destination);
     setNumMoves(Math.max(animationStepsCopy.current.length - 1, 0));
   }, [numDisks, source, numTowers, procedure]);
+
+  // updates animationStepsCopy on destination change
+  useEffect(() => {
+    animationStepsCopy.current = getAnimationSteps(procedure, initGameState, initDisks, source, destination);
+    setNumMoves(Math.max(animationStepsCopy.current.length - 1, 0));
+  }, [destination])
 
   // gameState mutation effects
   useEffect(() => {
     // update animation information
-    if (!animate) animationSteps.current = getAnimationSteps(procedure, gameState, initDisks, destination);
+    if (!animate) {
+      console.log(JSON.stringify(gameState));
+      animationSteps.current = getAnimationSteps(procedure, gameState, initDisks, source, destination);
+    }
     else {
       animationIndex.current++;
-      animationStepsCopy.current = getAnimationSteps(procedure, gameState, initDisks, destination);
+      animationStepsCopy.current = getAnimationSteps(procedure, gameState, initDisks, source, destination);
       animationStepsCopy.current.shift();
       setNumMoves(Math.max(animationStepsCopy.current.length - 1, 0));
     }
@@ -82,8 +92,8 @@ const GameLogic = ({
     // checking for win condition
     winCondition(procedure, numDisks, gameState[source], gameState[destination]) ? 
       winSound() && winModal() : 
-      (animate && animationIndex.current <= 2) || sound();
-  }, [gameState]);
+      (animate && animationIndex.current <= 2) || numRenders.current < 5 || sound();
+  }, [gameState, destination]);
 
   // solution animation
   useEffect(() => {
@@ -109,6 +119,7 @@ const GameLogic = ({
 
   // window resize event listener
   window.onresize = () => {
+    setAnimate(false);
     setScreenWidth(window.innerWidth);
     setScreenHeight(window.innerHeight);
   }
@@ -121,7 +132,7 @@ const GameLogic = ({
     const radius = newState[from].pop();
     newState[to].push(radius);
     if (update) {
-      animationStepsCopy.current = getAnimationSteps(procedure, newState, initDisks, destination);
+      animationStepsCopy.current = getAnimationSteps(procedure, newState, initDisks, source, destination);
       setNumMoves(Math.max(animationStepsCopy.current.length - 1, 0));
       setCurrStep(currStep === 0 ? -1 : 0);
     }
@@ -136,11 +147,12 @@ const GameLogic = ({
   const animationStep = animate ? 
     animationSteps.current[animationIndex.current] : 
     animationStepsCopy.current[currStep + indexShift] 
-  const moveAsString = JSON.stringify(animationStep + indexShift);
-  const initialMove = prevMove.current !== moveAsString; // checks for initial move; prevents perpetual rendering
+  // serves as a unique id for a valid move
+  const moveAsString = JSON.stringify(animationStep + indexShift + currStep);
+  const initialMove = prevMove.current !== moveAsString && currStep !== 0; // checks for initial move; prevents perpetual rendering
   // current animation step
-  const from = animationStep && (animate || initialMove) ? animationStep[indexShift] : -1;
-  let to = animationStep && (animate || initialMove) ? animationStep[1 - indexShift] : -1;
+  const from = animationStep && (animate || initialMove) ? animationStep[animate ? 0 : indexShift] : -1;
+  let to = animationStep && (animate || initialMove) ? animationStep[animate ? 1 : 1 - indexShift] : -1;
   if (from === to && !animate) to = -1;
   prevMove.current = moveAsString;
 
