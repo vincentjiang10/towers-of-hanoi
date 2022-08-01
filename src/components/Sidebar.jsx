@@ -43,7 +43,7 @@ import {
 } from "./popUps/Tooltips"
 import GameLogic from "./GameLogic";
 
-const Sidebar = ({ images, onBackgroundChange, setModal }) => {
+const Sidebar = ({ images, onBackgroundChange }) => {
 	// separate state for rendering options
 	// game info
 	const [collapse, setCollapse] = useState(false);
@@ -389,7 +389,7 @@ const Sidebar = ({ images, onBackgroundChange, setModal }) => {
 								icon={<IoMdHelp size="1.25em" />}
 								onClick={() => {
 									document.getElementsByClassName("introModal")[0].style.display = "block";
-									setModal(true);
+									document.getElementsByClassName("overlay")[0].style.display = "block";
 								}}
 							>
 								Help
@@ -436,7 +436,7 @@ const Sidebar = ({ images, onBackgroundChange, setModal }) => {
 			</div>
 
 			<div className="introModal">
-				<IntroModal opaque={opaque} setModal={setModal}/>
+				<IntroModal opaque={opaque}/>
 			</div>
 		</>
 	);

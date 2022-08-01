@@ -75,10 +75,7 @@ const GameLogic = ({
   // gameState mutation effects
   useEffect(() => {
     // update animation information
-    if (!animate) {
-      console.log(JSON.stringify(gameState));
-      animationSteps.current = getAnimationSteps(procedure, gameState, initDisks, source, destination);
-    }
+    if (!animate) animationSteps.current = getAnimationSteps(procedure, gameState, initDisks, source, destination);
     else {
       animationIndex.current++;
       animationStepsCopy.current = getAnimationSteps(procedure, gameState, initDisks, source, destination);

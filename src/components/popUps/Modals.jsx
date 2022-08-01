@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import useSound from "use-sound";
 import 'antd/dist/antd.css';
 import { Carousel } from "antd";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -19,7 +20,8 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
  *    - animation supports frequent pause and play: feel free to switch between animation and manual dragging
  */
 
-export const IntroModal = ({ opaque, setModal }) => {
+export const IntroModal = ({ opaque }) => {
+  const [click] = useSound(`${process.env.PUBLIC_URL}/assets/sounds/click.mp3`);
   const carousel = useRef(null);
   const [arrowDisabled, setArrowDisabled] = useState(false);
 
@@ -30,6 +32,7 @@ export const IntroModal = ({ opaque, setModal }) => {
 			});
 		}
     setArrowDisabled(true);
+    click();
     cooldown();
   }
 
@@ -108,7 +111,8 @@ export const IntroModal = ({ opaque, setModal }) => {
             await new Promise(() => {
               setTimeout(() => {
                 document.getElementsByClassName("introModal")[0].style.display = "none";
-                setModal(false);
+                document.getElementsByClassName("overlay")[0].style.display = "none";
+                click();
               }, 0);
             });
           }
