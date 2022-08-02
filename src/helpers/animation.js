@@ -33,7 +33,6 @@ const getAnimationSteps = (procedure, gameState, initDisks, source, destination)
     procedure === 2 ? adjacentSteps(animationSteps, diskPositions, diskPositions.length, destination) :
     alert(false)
   );
-  console.log("");
 
   // first move should hover ([from, from], using first move's from)
   const from = animationSteps[0] ? animationSteps[0][0] : -1;

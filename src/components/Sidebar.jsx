@@ -42,6 +42,7 @@ import {
 	AnimateTooltip 
 } from "./popUps/Tooltips"
 import GameLogic from "./GameLogic";
+import Header from "./Header";
 
 const Sidebar = ({ images, onBackgroundChange }) => {
 	// separate state for rendering options
@@ -168,6 +169,7 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 
 	return (
 		<>
+			
 			<ProSidebar collapsed={collapse}>
 				<IconContext.Provider className="sidebar" value={{ color: "LightSeaGreen" }}>
 
@@ -435,9 +437,14 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 				/>
 			</div>
 
-			<div className="introModal">
-				<IntroModal opaque={opaque}/>
-			</div>
+			<IntroModal opaque={opaque}/>
+			
+			<Header 
+				procedure={procedures[procedure]}
+				setNumTowers={setNumTowers} 
+				setNumDisks={setNumDisks}
+				handlePause={handlePause}
+			/>
 		</>
 	);
 }

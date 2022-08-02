@@ -4,6 +4,8 @@ import { Canvas } from "@react-three/fiber";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { PerspectiveCamera } from "@react-three/drei";
 import { winCondition } from "../helpers/procedures";
+import { auth, db } from "../helpers/firebase";
+import { setDoc } from "firebase/firestore";
 import getAnimationSteps from "../helpers/animation";
 import Disk from "./game/Disk";
 import Tower from "./game/Tower";
@@ -86,9 +88,14 @@ const GameLogic = ({
     const winModal = () => {
 
     }
+    // updates db by updating doc with id === user.uid
+    // sort the procedure array in the doc object if inserting new number of moves
+    const dbUpdate = () => {
+      
+    }
     // checking for win condition
     winCondition(procedure, numDisks, gameState[source], gameState[destination]) ? 
-      winSound() && winModal() : 
+      winSound() && winModal() && dbUpdate() : 
       (animate && animationIndex.current <= 2) || numRenders.current < 5 || sound();
   }, [gameState, destination]);
 

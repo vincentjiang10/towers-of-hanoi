@@ -15,6 +15,25 @@
 	transition: 0.8s ease-in-out;
 }
 
+.button {
+	display: inline-block;
+	background: #1d1d1d;
+	border-radius: 5px;
+	border: thin solid lightseagreen;
+	width: 100px;
+}
+
+.button:hover {
+	cursor: pointer;
+}
+
+.buttonText {
+	color: #d8d8d8;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .close {
 	color: lightseagreen !important;
 	font-size: 20px !important;
@@ -49,6 +68,30 @@
 	align-items: center;
 }
 
+.header {
+	background: #1d1d1d;
+	width: 500px;
+	padding: 5px 20px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1300;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.headerImage {
+	width: 25px;
+	height: 25px;
+}
+
+.headerText {
+	font-size: 18px;
+	text-shadow: 1px 1px lightseagreen;
+	color: #d8d8d8;
+}
+
 .icon {
 	animation: MoveUpDown 1s linear infinite;
 	position: absolute;
@@ -76,6 +119,87 @@
 
 .leftArrow:hover {
 	color: azure !important;
+}
+
+.levels {
+	top: 40px;
+	right: 0px;
+	width: 500px;
+	background: #2b2b2b;
+	position: absolute;
+	color: #d8d8d8;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px 20px;
+	transform-origin: top;
+	transition: all 300ms ease-in-out;
+}
+
+.levels .levelsGrid {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.levels .levelsGrid .levelsGridProcedure {
+	padding-top: 15px;
+	text-orientation: mixed;
+	writing-mode: vertical-lr;
+}
+
+.levels .levelsGrid .levelsGridRow {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.levels .levelsGrid .levelsGridRow .levelsGridButton {
+	color: lightseagreen;
+	border-radius: 5px;
+	border: thin solid lightseagreen;
+	width: 60px;
+}
+
+.levels .levelsGrid .levelsGridRow .levelsGridButton:hover {
+	color: royalblue;
+	background-color: lightblue;
+}
+
+.levels .levelsGrid .levelsGridVert {
+	padding-top: 15px;
+	text-orientation: mixed;
+	writing-mode: vertical-rl;
+}
+
+.levels .levelsGrid .levelsGridVertLabels {
+	position: relative;
+	top: 8px;
+	padding-left: 10px;
+	text-orientation: upright;
+	writing-mode: vertical-rl;
+	height: 160px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.levels .levelsGridHoriz {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.levels .levelsGridHorizLabels {
+	position: relative;
+	padding-bottom: 5px;
+	left: 85px;
+	width: 302px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .materialItem {

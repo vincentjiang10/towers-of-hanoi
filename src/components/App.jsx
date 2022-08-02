@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "../styles/App.css";
-import Header from "./Header";
 import Sidebar from "./Sidebar"
 
 function App() {
@@ -8,7 +7,6 @@ function App() {
   const [image, setImage] = useState(Math.floor(images.length * Math.random()));
 
   return (
-    <>
     <div className="background" style={{ 
       backgroundImage: `url(${process.env.PUBLIC_URL}/assets/images/${images[image]}.jpg)`,
       backgroundSize: "cover"}}>
@@ -20,8 +18,6 @@ function App() {
         />
       </div>
     </div>
-    <Header />
-    </>
   );
 }
 

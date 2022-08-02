@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
 import { 
   getAuth, 
   GoogleAuthProvider,
@@ -19,16 +19,18 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
 export const auth = getAuth(app);
+export const db = getFirestore(app);
 
 const provider = new GoogleAuthProvider();
 
 export const signInWithGoogle = async () => {
   signInWithPopup(auth, provider)
-    .then((cred) => {
+    .then(async (cred) => {
       const userDocRef = doc(db, "users", cred.user.uid);
-      // initialize document
+      const userDocSnap = await getDoc(userDocRef);
+      userDocSnap.exists() || 
+      // initialize document if it doesn't exist
       setDoc(userDocRef, {
         standard: [],
         bicolor: [],
