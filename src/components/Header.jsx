@@ -7,7 +7,14 @@ import { FcGoogle } from "react-icons/fc";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import useSound from "use-sound";
 
-const Header = ({ procedure, setNumTowers, setNumDisks, handlePause }) => {
+const Header = ({ 
+  procedure, 
+  setNumTowers, 
+  setNumDisks, 
+  handlePause,
+  setSource, 
+  setDestination
+}) => {
   // clicking sound effect
   const [click] = useSound(`${process.env.PUBLIC_URL}/assets/sounds/click.mp3`);
   const [user, setUser] = useState(auth.currentUser);
@@ -72,11 +79,13 @@ const Header = ({ procedure, setNumTowers, setNumDisks, handlePause }) => {
       </button>
       
       <Levels 
-        userData={userData ? userData[procedure.toLowerCase()] : []} 
         dropDown={dropDown} 
+        procedureObj={userData ? userData[procedure.toLowerCase()] : false} 
         procedure={procedure}
         setNumTowers={setNumTowers}
         setNumDisks={setNumDisks}
+        setSource={setSource}
+        setDestination={setDestination}
         handlePause={handlePause}
         click={click}
       /> 
@@ -84,32 +93,39 @@ const Header = ({ procedure, setNumTowers, setNumDisks, handlePause }) => {
   )
 }
 
-const Levels = ({ 
-  userData, 
-  dropDown,
+const Levels = ({
+  dropDown, 
+  procedureObj, 
   procedure, 
   setNumTowers, 
   setNumDisks,
+  setSource,
+  setDestination,
   handlePause,
   click
 }) => {
-  let currIndex = -1;
-  // array: level[0] = number of disks, level[1] = number of towers, level[2] = number of moves
-  let level = [0,0,0];
-  // updates level and returns number of moves
-  const updateLevel = () => {
-    const moves = level[2];
-    currIndex++;
-    level = !userData || currIndex === userData.length ? [-1, -1] : userData[currIndex]; 
-    return moves;
-  }
-  updateLevel();
   // button style if level completed
   const completedButton = () => {
     return {
       color: "#3d3d3d",
       backgroundColor: "lightseagreen"
     }
+  }
+  // handles button click 
+  const handleClick = (numDisks, numTowers) => {
+    const delaySet = async () => {
+			await new Promise(() => {
+				setTimeout(() => {
+          setSource(0);
+          setDestination(numTowers-1);
+				}, 0);
+			});
+		}
+    click();
+    handlePause();
+    setNumDisks(numDisks);
+    setNumTowers(numTowers);
+    delaySet();
   }
 
   return (
@@ -141,19 +157,18 @@ const Levels = ({
               {[...Array(5)].map((_, towerIndex) => 
                 <button className="levelsGridButton"
                   key={towerIndex}
-                  onClick={() => {
-                    click();
-                    handlePause();
-                    setNumDisks(7-diskIndex);
-                    setNumTowers(towerIndex+3);
-                  }}
-                  style={7-diskIndex !== level[0] || towerIndex+3 !== level[1] ? {} : completedButton()}
+                  onClick={() => {handleClick(7-diskIndex, towerIndex+3)}}
+                  style={
+                    procedureObj ? 
+                    (procedureObj.hasOwnProperty(`${7 - diskIndex}${towerIndex+3}`) ? completedButton() : {}) : {}
+                  }
                 >
                   <div>
                     {
-                      7-diskIndex !== level[0] || towerIndex+3 !== level[1] ? 
-                      "N/A" :
-                      updateLevel()
+                      procedureObj ?
+                      procedureObj.hasOwnProperty(`${7 - diskIndex}${towerIndex+3}`) ? 
+                      procedureObj[`${7 - diskIndex}${towerIndex+3}`] : "N/A" : 
+                      "N/A"
                     }
                   </div>
                 </button>

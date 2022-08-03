@@ -30,11 +30,11 @@ export const signInWithGoogle = async () => {
       const userDocRef = doc(db, "users", cred.user.uid);
       const userDocSnap = await getDoc(userDocRef);
       userDocSnap.exists() || 
-      // initialize document if it doesn't exist
+      // initialize document if it doesn't exist d
       setDoc(userDocRef, {
-        standard: [],
-        bicolor: [],
-        adjacent: []
+        standard: {},
+        bicolor: {},
+        adjacent: {}
       });
     })
     .catch((error) => {

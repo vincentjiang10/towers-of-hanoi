@@ -14,7 +14,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
  *    - what this app does (it's purpose) : be quick!!
  *    - how to use this app? (How to move the disks)
  *  2. Signing in features 
- *    - talk about what features are available on sign-in: # of moves
+ *    - talk about what features are available on sign-in: # of moves (animating and moving will show up as an indicator)
  *  3. Quick slide on features
  *    - hovering over items will produce popUp (modeless) after 1 second delay
  *    - animation supports frequent pause and play: feel free to switch between animation and manual dragging

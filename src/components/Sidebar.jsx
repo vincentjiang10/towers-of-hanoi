@@ -144,7 +144,7 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 		<div className="towerItem">
 			{/* tower icons generation, loops through array of length numTowers */
 				[...Array(numTowers)].map((_, index) => 
-					<span className="towerIcon" 
+					<div className="towerIcon" 
 						key={index}
 						style={{ 
 							background: `linear-gradient(transparent 50%, ${index === dir ? "DeepSkyBlue" : "Cyan"} 50%`,
@@ -158,7 +158,7 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 							color={index === dir ? "RoyalBlue" : "LightSeaGreen"}
 							size={35}
 						/>
-					</span>
+					</div>
 				)
 			}
 		</div>
@@ -213,6 +213,22 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 							</SubMenu>
 
 							<SubMenu 
+								title={<Tippy content={<SourceTooltip />} singleton={target}><div>Source Tower</div></Tippy>} 
+								icon={<FaChevronUp />}
+								onClick={handlePause}
+							>
+								{towerItem(source, setSource)}
+							</SubMenu>
+
+							<SubMenu 
+								title={<Tippy content={<DestTooltip />} singleton={target}><div>Destination Tower</div></Tippy>}
+								icon={<FaChevronDown />}
+								onClick={handlePause}
+							>
+								{towerItem(destination, setDestination)}
+							</SubMenu>
+
+							<SubMenu 
 								title={<Tippy content={<TowerTooltip />} singleton={target}><div>Number of Towers</div></Tippy>}
 								icon={<FaGripLinesVertical />}
 								onClick={handlePause}
@@ -252,22 +268,6 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 										onChangeCommitted={(_, newVal) => {setNumDisks(newVal)}}
 									/>
 								</div>
-							</SubMenu>
-
-							<SubMenu 
-								title={<Tippy content={<SourceTooltip />} singleton={target}><div>Source Tower</div></Tippy>} 
-								icon={<FaChevronUp />}
-								onClick={handlePause}
-							>
-								{towerItem(source, setSource)}
-							</SubMenu>
-
-							<SubMenu 
-								title={<Tippy content={<DestTooltip />} singleton={target}><div>Destination Tower</div></Tippy>}
-								icon={<FaChevronDown />}
-								onClick={handlePause}
-							>
-								{towerItem(destination, setDestination)}
 							</SubMenu>
 
 							<SubMenu 
@@ -443,6 +443,8 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 				procedure={procedures[procedure]}
 				setNumTowers={setNumTowers} 
 				setNumDisks={setNumDisks}
+				setSource={setSource}
+				setDestination={setDestination}
 				handlePause={handlePause}
 			/>
 		</>

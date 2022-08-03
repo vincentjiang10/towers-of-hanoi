@@ -5,7 +5,7 @@ import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { PerspectiveCamera } from "@react-three/drei";
 import { winCondition } from "../helpers/procedures";
 import { auth, db } from "../helpers/firebase";
-import { setDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import getAnimationSteps from "../helpers/animation";
 import Disk from "./game/Disk";
 import Tower from "./game/Tower";
@@ -18,11 +18,11 @@ const GameLogic = ({
   destination, 
   texture, 
   animate, 
-  setAnimate,
+  setAnimate, 
   playRate, 
-  currStep,
-  setCurrStep,
-  setNumMoves,
+  currStep, 
+  setCurrStep, 
+  setNumMoves, 
   forward
 }) => {
   // gameState is an array whose elements represent individual tower states
@@ -34,6 +34,8 @@ const GameLogic = ({
   const [click] = useSound(`${path}click.mp3`);
   const [winSound] = useSound(`${path}win.mp3`);
   const [sound] = useSound(`${path}${texture}.mp3`);
+  const hasAnimated = useRef(false);
+  const numMoves = useRef(0);
   const numRenders = useRef(0);
   // initial disk state (ordered least to small)
   const initDisks = [...Array(numDisks)].map((_, index) => 0.7-0.38*index/(numDisks-1));
@@ -66,6 +68,8 @@ const GameLogic = ({
     setGameState(initGameState);
     animationStepsCopy.current = getAnimationSteps(procedure, initGameState, initDisks, source, destination);
     setNumMoves(Math.max(animationStepsCopy.current.length - 1, 0));
+    numMoves.current = 0; // set numMoves to 0 upon gameState reset
+    hasAnimated.current = false; // set hasAnimated to false when reseting gameState
   }, [numDisks, source, numTowers, procedure]);
 
   // updates animationStepsCopy on destination change
@@ -89,18 +93,42 @@ const GameLogic = ({
 
     }
     // updates db by updating doc with id === user.uid
-    // sort the procedure array in the doc object if inserting new number of moves
-    const dbUpdate = () => {
-      
+    const dbUpdate = async () => {
+      if (auth.currentUser && !hasAnimated.current) {
+        const userDocRef = doc(db, "users", auth.currentUser.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        const getProcedure = (procedure) => 
+          procedure === 0 ? "standard" :
+          procedure === 1 ? "bicolor" :
+          procedure === 2 ? "adjacent" :
+          "none"
+        const procedureName = getProcedure(procedure);
+        const procedureObj = userDocSnap.data()[procedureName];
+        const key = `${numDisks}${numTowers}`;
+        const newField = {...procedureObj, [key]: numMoves.current};
+        // update doc if numMoves is less than existing, or no existing key/field currently exists 
+        (!procedureObj.hasOwnProperty(key) || 
+        procedureObj[key] > numMoves.current) && 
+        await updateDoc(userDocRef, {
+          [procedureName]: newField
+        })
+      }
+    }
+    // win effects
+    const winEffect = () => {
+      winSound();
+      winModal();
+      dbUpdate();
     }
     // checking for win condition
     winCondition(procedure, numDisks, gameState[source], gameState[destination]) ? 
-      winSound() && winModal() && dbUpdate() : 
+      winEffect() : 
       (animate && animationIndex.current <= 2) || numRenders.current < 5 || sound();
   }, [gameState, destination]);
 
   // solution animation
   useEffect(() => {
+    hasAnimated.current = true;
     if (!animate) animationIndex.current = 0;
   }, [animate]);
 
@@ -139,7 +167,9 @@ const GameLogic = ({
       animationStepsCopy.current = getAnimationSteps(procedure, newState, initDisks, source, destination);
       setNumMoves(Math.max(animationStepsCopy.current.length - 1, 0));
       setCurrStep(currStep === 0 ? -1 : 0);
+      numMoves.current++; // add to user numMoves
     }
+    else hasAnimated.current = true;
     setGameState(newState);
   }
 
