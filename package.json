@@ -2,7 +2,6 @@
   "name": "towers-of-hanoi",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://vjiang10.github.io/towers-of-hanoi",
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
@@ -17,6 +16,7 @@
     "@use-gesture/react": "^10.2.17",
     "antd": "^4.22.2",
     "firebase": "^9.9.1",
+    "firebase-tools": "^11.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
@@ -30,8 +30,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "npm run build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -56,7 +55,6 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0",
     "react-scripts": "5.0.1"
   }
 }

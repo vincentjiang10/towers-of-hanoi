@@ -88,10 +88,13 @@ const GameLogic = ({
       animationStepsCopy.current.shift();
       setNumMoves(Math.max(animationStepsCopy.current.length - 1, 0));
     }
-    // TODO: import from Modal.jsx
-    const winModal = () => {
 
+    // displays winModal
+    const winModal = () => {
+		  document.getElementsByClassName("overlay")[0].style.display = "block";
+      document.getElementsByClassName("winModal")[0].style.display = "block";
     }
+
     // updates db by updating doc with id === user.uid
     const dbUpdate = async () => {
       if (auth.currentUser && !hasAnimated.current) {
@@ -114,12 +117,14 @@ const GameLogic = ({
         })
       }
     }
+
     // win effects
     const winEffect = () => {
       winSound();
       winModal();
       dbUpdate();
     }
+
     // checking for win condition
     winCondition(procedure, numDisks, gameState[source], gameState[destination]) ? 
       winEffect() : 

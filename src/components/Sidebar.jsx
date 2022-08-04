@@ -9,7 +9,6 @@ import {
 	SubMenu 
 } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
-import { IntroModal } from "./popUps/Modals";
 import { Slider } from "@mui/material";
 import { IconContext } from "react-icons";
 import { 
@@ -26,7 +25,6 @@ import {
 	FaGithub
 } from "react-icons/fa";
 import { AiOutlineCaretRight, AiFillPicture, AiTwotoneEdit } from "react-icons/ai";
-import { TbTallymark1 } from "react-icons/tb";
 import { IoMdHelp, IoMdMore, IoMdInformationCircleOutline } from "react-icons/io";
 import Tippy, { useSingleton } from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
@@ -41,6 +39,7 @@ import {
 	MaterialTooltip, 
 	AnimateTooltip 
 } from "./popUps/Tooltips"
+import { IntroModal, WinModal } from "./popUps/Modals";
 import GameLogic from "./GameLogic";
 import Header from "./Header";
 
@@ -71,7 +70,7 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 				setTimeout(() => {
 					setSource(source);
 					numMoves.current = moves;
-				}, 400);
+				}, 200);
 			});
 		}
 		setCurrStep(0);
@@ -147,17 +146,24 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 					<div className="towerIcon" 
 						key={index}
 						style={{ 
-							background: `linear-gradient(transparent 50%, ${index === dir ? "DeepSkyBlue" : "Cyan"} 50%`,
+							background: `linear-gradient(transparent 60%, ${index === dir ? "DeepSkyBlue" : "Cyan"} 40%`,
 							...opaque(animate)
 						}}
 						onClick={() => {
 							index !== source && index !== destination && set(index);
 						}}
 					>
-						<TbTallymark1 
-							color={index === dir ? "RoyalBlue" : "LightSeaGreen"}
-							size={35}
-						/>
+						<div style={{ 
+							position: "relative",
+							bottom: "2px",
+							left: "11px",
+							fontWeight: "500", 
+							fontSize: "30px", 
+							width: "30px", 
+							color: index === dir ? "RoyalBlue" : "LightSeaGreen" 
+						}}>
+							|
+						</div>
 					</div>
 				)
 			}
@@ -168,10 +174,9 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 	const procedures = ["Standard", "Bicolor", "Adjacent"];
 
 	return (
-		<>
-			
+		<>	
 			<ProSidebar collapsed={collapse}>
-				<IconContext.Provider className="sidebar" value={{ color: "LightSeaGreen" }}>
+				<IconContext.Provider value={{ color: "LightSeaGreen" }}>
 
 					<SidebarHeader>
 						<Menu iconShape="circle">
@@ -210,22 +215,6 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 										</div>
 									</MenuItem>
 								)}
-							</SubMenu>
-
-							<SubMenu 
-								title={<Tippy content={<SourceTooltip />} singleton={target}><div>Source Tower</div></Tippy>} 
-								icon={<FaChevronUp />}
-								onClick={handlePause}
-							>
-								{towerItem(source, setSource)}
-							</SubMenu>
-
-							<SubMenu 
-								title={<Tippy content={<DestTooltip />} singleton={target}><div>Destination Tower</div></Tippy>}
-								icon={<FaChevronDown />}
-								onClick={handlePause}
-							>
-								{towerItem(destination, setDestination)}
 							</SubMenu>
 
 							<SubMenu 
@@ -268,6 +257,22 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 										onChangeCommitted={(_, newVal) => {setNumDisks(newVal)}}
 									/>
 								</div>
+							</SubMenu>
+
+							<SubMenu 
+								title={<Tippy content={<SourceTooltip />} singleton={target}><div>Source Tower</div></Tippy>} 
+								icon={<FaChevronUp />}
+								onClick={handlePause}
+							>
+								{towerItem(source, setSource)}
+							</SubMenu>
+
+							<SubMenu 
+								title={<Tippy content={<DestTooltip />} singleton={target}><div>Destination Tower</div></Tippy>}
+								icon={<FaChevronDown />}
+								onClick={handlePause}
+							>
+								{towerItem(destination, setDestination)}
 							</SubMenu>
 
 							<SubMenu 
@@ -437,7 +442,9 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 				/>
 			</div>
 
-			<IntroModal opaque={opaque}/>
+			<IntroModal opaque={opaque} />
+
+			<WinModal />
 			
 			<Header 
 				procedure={procedures[procedure]}

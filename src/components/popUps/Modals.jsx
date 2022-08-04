@@ -11,10 +11,52 @@ import {
   FaGripLinesVertical,
   FaPlay,
   FaPause,
+  FaRedo, 
   FaGithub
 } from "react-icons/fa";
 import { IoMdHelp, IoMdMore, IoMdInformationCircleOutline } from "react-icons/io";
 import { AiFillPicture, AiTwotoneEdit } from "react-icons/ai";
+
+// styling for content
+const contentStyle = {
+  height: "400px",
+  color: "#fff",
+  lineHeight: "30px",
+  background: "#1d1d1d",
+  border: "thin solid lightseagreen"
+};
+
+// styling for icons 
+const iconStyle = {
+  fontSize: "1.2em",
+  color: "lightseagreen",
+  verticalAlign: "middle",
+}
+
+// styling for sections
+const sectionStyle = {
+  lineHeight: "20px",
+  padding: "5px 20px",
+  margin: "10px 5px",
+  border: "thin dotted lightseagreen",
+  background: "#364d79",
+  borderRadius: "10px"
+}
+
+// styling for images
+const imageStyle = {
+  display: "block",
+  marginLeft: "auto",
+  marginRight: "auto",
+  padding: "10px 10px",
+  width: "50%"
+}
+
+// styling for arrows
+const arrowStyle = {
+  color: "LightSeaGreen",
+  size: "2em"
+}
 
 // Introduction modal (called on screen refresh and by user calling help button)
 export const IntroModal = ({ opaque }) => {
@@ -32,47 +74,6 @@ export const IntroModal = ({ opaque }) => {
     setArrowDisabled(true);
     click();
     cooldown();
-  }
-
-  // styling for content
-  const contentStyle = {
-    height: "400px",
-    color: "#fff",
-    lineHeight: "30px",
-    background: "#1d1d1d",
-    border: "thin solid lightseagreen"
-  };
-
-  // styling for icons 
-  const iconStyle = {
-    fontSize: "1.2em",
-    color: "lightseagreen",
-    verticalAlign: "middle",
-  }
-
-  // styling for sections
-  const sectionStyle = {
-    lineHeight: "20px",
-    padding: "5px 20px",
-    margin: "10px 5px",
-    border: "thin dotted lightseagreen",
-    background: "#364d79",
-    borderRadius: "10px"
-  }
-
-  // styling for images
-  const imageStyle = {
-    display: "block",
-    marginLeft: "auto",
-    marginRight: "auto",
-    padding: "10px 10px",
-    width: "50%"
-  }
-
-  // styling for arrows
-  const arrowStyle = {
-    color: "LightSeaGreen",
-    size: "2em"
   }
   
   return (
@@ -118,10 +119,10 @@ export const IntroModal = ({ opaque }) => {
                 </ul>
               </div>
               <div style={sectionStyle}>
-                In <b>Rules and Variants</b> (<IoMdMore size="1.2em" style={iconStyle} />), you can hover over the info (<IoMdInformationCircleOutline size="1.2em" style={iconStyle} />) 
+                In <b>Rules and Variants</b> (<IoMdMore size="1.2em" style={iconStyle} />), hover over the info (<IoMdInformationCircleOutline size="1.2em" style={iconStyle} />) 
                 icons to take a look at the rules for each puzzle. 
                 Hovering over each item in the sidebar will offer a description of usage. 
-                <b> Reset</b> will enable you to reset the puzzle to the original state.  
+                <b> Reset</b> (<FaRedo size="0.8em" style={iconStyle} />) will enable you to reset the puzzle to the original state.  
               </div>
             </div>
           </div>
@@ -140,7 +141,7 @@ export const IntroModal = ({ opaque }) => {
                   <li>Moving the disks on pause, which moves one disk at a time by clicking forward (<FaChevronRight style={iconStyle}/>) or backward (<FaChevronLeft style={iconStyle}/>)</li>
                   <li>Moving the disks on play, which plays the solution animation</li>
                 </ul>
-                There is a play rate slider for both options, which sets the animation speed
+                <b>Note: Animate</b> (<FaPlay size="0.7em" style={iconStyle} />) is currently only available for puzzles with 3 towers.
               </div>
               <div style={sectionStyle}>
                 <b>Animate</b> (<FaPlay size="0.7em" style={iconStyle} />) toggle options: <br />
@@ -211,9 +212,53 @@ export const IntroModal = ({ opaque }) => {
           carousel.current.goTo(0, true);
           closeModal();
         }}
+        style={{ bottom: "425px" }}
       >
         &times;
       </div>
+    </div>
+  )
+}
+
+// Modal called on puzzle solution
+export const WinModal = () => {
+  const [click] = useSound(`${process.env.PUBLIC_URL}/assets/sounds/click.mp3`);
+
+  return (
+    <div className="winModal">
+      <div style={contentStyle}>
+        <br />
+        <div className="heading">
+          You have solved a puzzle level!
+        </div>
+        <div className="body">
+          <div style={sectionStyle}>
+          Feel free to navigate the sidebar to set another puzzle configuration or click <b>Reset </b> <br />
+          (<FaRedo size="0.8em" style={iconStyle} /> ) to reset the current puzzle.
+          Click on <b>Levels</b> on the top right corner to try another level 
+          (if you are signed in, you should see the updated number of moves for the current level).
+          You can also switch the puzzle type in <b>Rules and Variants </b> 
+          (<IoMdMore size="1.2em" style={iconStyle} />) on the sidebar.
+          </div>
+        </div>
+      </div>
+      <div className="close" 
+          onClick={() => {
+            const closeModal = async () => {
+              await new Promise(() => {
+                setTimeout(() => {
+                  document.getElementsByClassName("overlay")[0].style.display = "none";
+                  document.getElementsByClassName("winModal")[0].style.display = "none";
+                  click();
+                }, 0);
+              });
+            }
+            closeModal();
+          }}
+          style={{ bottom: "400px" }}
+        >
+          &times;
+        </div>
     </div>
   )
 }
