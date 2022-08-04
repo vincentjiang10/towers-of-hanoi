@@ -7,12 +7,12 @@ import { FcGoogle } from "react-icons/fc";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import useSound from "use-sound";
 
-const Header = ({ 
-  procedure, 
-  setNumTowers, 
-  setNumDisks, 
+const Header = ({
+  procedure,
+  setNumTowers,
+  setNumDisks,
   handlePause,
-  setSource, 
+  setSource,
   setDestination
 }) => {
   // clicking sound effect
@@ -29,7 +29,7 @@ const Header = ({
       setUserData(doc.data());
     });
     user || setUserData(false);
-    return () => {user && unsub()};
+    return () => { user && unsub() };
   }, [user])
 
   // updates user on auth state change
@@ -55,7 +55,7 @@ const Header = ({
         onClick={user ? signOutOfGoogle : signInWithGoogle}
       >
         <div className="buttonText">
-          <FcGoogle size="1.2em"/>
+          <FcGoogle size="1.2em" />
           <div style={{ padding: "2px 5px" }}>
             {user ? "Sign Out" : "Sign In"}
           </div>
@@ -77,10 +77,10 @@ const Header = ({
           </IconContext.Provider>
         </div>
       </button>
-      
-      <Levels 
-        dropDown={dropDown} 
-        procedureObj={userData ? userData[procedure.toLowerCase()] : false} 
+
+      <Levels
+        dropDown={dropDown}
+        procedureObj={userData ? userData[procedure.toLowerCase()] : false}
         procedure={procedure}
         setNumTowers={setNumTowers}
         setNumDisks={setNumDisks}
@@ -88,16 +88,16 @@ const Header = ({
         setDestination={setDestination}
         handlePause={handlePause}
         click={click}
-      /> 
+      />
     </div>
   )
 }
 
 const Levels = ({
-  dropDown, 
-  procedureObj, 
-  procedure, 
-  setNumTowers, 
+  dropDown,
+  procedureObj,
+  procedure,
+  setNumTowers,
   setNumDisks,
   setSource,
   setDestination,
@@ -114,13 +114,13 @@ const Levels = ({
   // handles button click 
   const handleClick = (numDisks, numTowers) => {
     const delaySet = async () => {
-			await new Promise(() => {
-				setTimeout(() => {
+      await new Promise(() => {
+        setTimeout(() => {
           setSource(0);
-          setDestination(numTowers-1);
-				}, 0);
-			});
-		}
+          setDestination(numTowers - 1);
+        }, 0);
+      });
+    }
     click();
     handlePause();
     setNumDisks(numDisks);
@@ -129,9 +129,9 @@ const Levels = ({
   }
 
   return (
-    <div className="levels" 
-      style={{ 
-        display: "block", 
+    <div className="levels"
+      style={{
+        display: "block",
         transform: dropDown ? "scaleY(1)" : "scaleY(0)",
         opacity: dropDown ? "1" : "0"
       }}
@@ -145,30 +145,30 @@ const Levels = ({
           Number of Disks
         </div>
         <div className="levelsGridVertLabels">
-          {[...Array(5)].map((_, diskIndex) => 
+          {[...Array(5)].map((_, diskIndex) =>
             <div key={diskIndex}>
               {7 - diskIndex}
             </div>
           )}
         </div>
         <div style={{ display: "grid", padding: "15px 25px 0px 5px", height: "200px", width: "400px" }}>
-          {[...Array(5)].map((_, diskIndex) => 
+          {[...Array(5)].map((_, diskIndex) =>
             <div className="levelsGridRow" key={diskIndex} >
-              {[...Array(5)].map((_, towerIndex) => 
+              {[...Array(5)].map((_, towerIndex) =>
                 <button className="levelsGridButton"
                   key={towerIndex}
-                  onClick={() => {handleClick(7-diskIndex, towerIndex+3)}}
+                  onClick={() => { handleClick(7 - diskIndex, towerIndex + 3) }}
                   style={
-                    procedureObj ? 
-                    (procedureObj.hasOwnProperty(`${7 - diskIndex}${towerIndex+3}`) ? completedButton() : {}) : {}
+                    procedureObj ?
+                      (procedureObj.hasOwnProperty(`${7 - diskIndex}${towerIndex + 3}`) ? completedButton() : {}) : {}
                   }
                 >
                   <div>
                     {
                       procedureObj ?
-                      procedureObj.hasOwnProperty(`${7 - diskIndex}${towerIndex+3}`) ? 
-                      procedureObj[`${7 - diskIndex}${towerIndex+3}`] : "N/A" : 
-                      "N/A"
+                        procedureObj.hasOwnProperty(`${7 - diskIndex}${towerIndex + 3}`) ?
+                          procedureObj[`${7 - diskIndex}${towerIndex + 3}`] : "N/A" :
+                        "N/A"
                     }
                   </div>
                 </button>
@@ -182,9 +182,9 @@ const Levels = ({
         </div>
       </div>
       <div className="levelsGridHorizLabels">
-        {[...Array(5)].map((_, towerIndex) => 
+        {[...Array(5)].map((_, towerIndex) =>
           <div key={towerIndex}>
-            {towerIndex+3}
+            {towerIndex + 3}
           </div>
         )}
       </div>

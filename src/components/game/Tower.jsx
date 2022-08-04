@@ -15,10 +15,10 @@ const Tower = ({ position, toUrl, numDisks }) => {
   return (
     <group>
       <mesh position={position}>
-        <cylinderBufferGeometry args={[0.15, 0.15, 1.2 + 2.4*numDisks/7]} />
+        <cylinderBufferGeometry args={[0.15, 0.15, 1.2 + 2.4 * numDisks / 7]} />
         <meshPhysicalMaterial {...textureProps} roughness={1} attach="material" />
       </mesh>
-      <mesh position={position.map((x,i) => i === 1 ? x-1 - numDisks/14 : x)}>
+      <mesh position={position.map((x, i) => i === 1 ? x - 1 - numDisks / 14 : x)}>
         <cylinderBufferGeometry args={[0.9, 1, 0.2, 50]} />
         <meshPhysicalMaterial {...textureProps} roughness={1} attach="material" />
       </mesh>

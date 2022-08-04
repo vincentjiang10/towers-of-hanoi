@@ -7,13 +7,14 @@ function App() {
   const [image, setImage] = useState(Math.floor(images.length * Math.random()));
 
   return (
-    <div className="background" style={{ 
+    <div className="background" style={{
       backgroundImage: `url(${process.env.PUBLIC_URL}/assets/images/${images[image]}.jpg)`,
-      backgroundSize: "cover"}}>
-      <div className="overlay"/>
-      <div className="sidebar"> 
-        <Sidebar 
-          images={images} 
+      backgroundSize: "cover"
+    }}>
+      <div className="overlay" />
+      <div className="sidebar">
+        <Sidebar
+          images={images}
           onBackgroundChange={(index) => setImage(index)}
         />
       </div>

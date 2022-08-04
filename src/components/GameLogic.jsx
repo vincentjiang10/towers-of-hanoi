@@ -10,19 +10,19 @@ import getAnimationSteps from "../helpers/animation";
 import Disk from "./game/Disk";
 import Tower from "./game/Tower";
 
-const GameLogic = ({ 
-  procedure, 
-  numTowers, 
-  numDisks, 
-  source, 
-  destination, 
-  texture, 
-  animate, 
-  setAnimate, 
-  playRate, 
-  currStep, 
-  setCurrStep, 
-  setNumMoves, 
+const GameLogic = ({
+  procedure,
+  numTowers,
+  numDisks,
+  source,
+  destination,
+  texture,
+  animate,
+  setAnimate,
+  playRate,
+  currStep,
+  setCurrStep,
+  setNumMoves,
   forward
 }) => {
   // gameState is an array whose elements represent individual tower states
@@ -38,7 +38,7 @@ const GameLogic = ({
   const numMoves = useRef(0);
   const numRenders = useRef(0);
   // initial disk state (ordered least to small)
-  const initDisks = [...Array(numDisks)].map((_, index) => 0.7-0.38*index/(numDisks-1));
+  const initDisks = [...Array(numDisks)].map((_, index) => 0.7 - 0.38 * index / (numDisks - 1));
   // animationSteps will be an array containing steps in the form [from, to] 
   const animationSteps = useRef([[]]);
   // set to 0 on pause and increments by one after each animation step when playing
@@ -48,20 +48,20 @@ const GameLogic = ({
   // stores previous move 
   const prevMove = useRef("");
   // initial game state
-  const initGameState = [...Array(numTowers)].map((_, index) => 
-    index === source ? initDisks : 
-    (
-      // bicolor procedure check
-      procedure === 1 && 
-      (source < numTowers-1 ? index === source+1 : index === numTowers-2)
-    )
-    ? initDisks.map(x => x-0.001) : []
+  const initGameState = [...Array(numTowers)].map((_, index) =>
+    index === source ? initDisks :
+      (
+        // bicolor procedure check
+        procedure === 1 &&
+        (source < numTowers - 1 ? index === source + 1 : index === numTowers - 2)
+      )
+        ? initDisks.map(x => x - 0.001) : []
   );
 
   // click sound effect played upon sidebar state change
-  useEffect(() => {numRenders.current++}, [gameState]);
-  useEffect(() => {numRenders.current < 4 || click()}, [procedure, texture, animate, click]);
-  useEffect(() => {currStep <= 0 || click()}, [currStep, click]);
+  useEffect(() => { numRenders.current++ }, [gameState]);
+  useEffect(() => { numRenders.current < 4 || click() }, [procedure, texture, animate, click]);
+  useEffect(() => { currStep <= 0 || click() }, [currStep, click]);
 
   // resets gameState
   useEffect(() => {
@@ -91,7 +91,7 @@ const GameLogic = ({
 
     // displays winModal
     const winModal = () => {
-		  document.getElementsByClassName("overlay")[0].style.display = "block";
+      document.getElementsByClassName("overlay")[0].style.display = "block";
       document.getElementsByClassName("winModal")[0].style.display = "block";
     }
 
@@ -100,21 +100,21 @@ const GameLogic = ({
       if (auth.currentUser && !hasAnimated.current) {
         const userDocRef = doc(db, "users", auth.currentUser.uid);
         const userDocSnap = await getDoc(userDocRef);
-        const getProcedure = (procedure) => 
+        const getProcedure = (procedure) =>
           procedure === 0 ? "standard" :
-          procedure === 1 ? "bicolor" :
-          procedure === 2 ? "adjacent" :
-          "none"
+            procedure === 1 ? "bicolor" :
+              procedure === 2 ? "adjacent" :
+                "none"
         const procedureName = getProcedure(procedure);
         const procedureObj = userDocSnap.data()[procedureName];
         const key = `${numDisks}${numTowers}`;
-        const newField = {...procedureObj, [key]: numMoves.current};
+        const newField = { ...procedureObj, [key]: numMoves.current };
         // update doc if numMoves is less than existing, or no existing key/field currently exists 
-        (!procedureObj.hasOwnProperty(key) || 
-        procedureObj[key] > numMoves.current) && 
-        await updateDoc(userDocRef, {
-          [procedureName]: newField
-        })
+        (!procedureObj.hasOwnProperty(key) ||
+          procedureObj[key] > numMoves.current) &&
+          await updateDoc(userDocRef, {
+            [procedureName]: newField
+          })
       }
     }
 
@@ -126,8 +126,8 @@ const GameLogic = ({
     }
 
     // checking for win condition
-    winCondition(procedure, numDisks, gameState[source], gameState[destination]) ? 
-      winEffect() : 
+    winCondition(procedure, numDisks, gameState[source], gameState[destination]) ?
+      winEffect() :
       (animate && animationIndex.current <= 2) || numRenders.current < 5 || sound();
   }, [gameState, destination]);
 
@@ -139,20 +139,20 @@ const GameLogic = ({
 
   // --- Positioning ---
   // spacing
-  const space = 17 / (numTowers+1);
+  const space = 17 / (numTowers + 1);
 
   // returns x-coordinate relative to Canvas
-  const width = (start, index) => start + space*(index+1);
+  const width = (start, index) => start + space * (index + 1);
 
   // scale factors
-  const scale = 1 + 1/20 * (7-numTowers);
-  const coef = 60.75*scale*screenHeight/500;
+  const scale = 1 + 1 / 20 * (7 - numTowers);
+  const coef = 60.75 * scale * screenHeight / 500;
 
   // offset from screen bottom 
-  const bottom = screenHeight/10 - 10*(7-numTowers);
+  const bottom = screenHeight / 10 - 10 * (7 - numTowers);
   // offset from screen left
-  const leftSource = screenWidth/2 + coef*width(-8.35, source);
-  const leftDest = screenWidth/2 + coef*width(-8.35, destination);
+  const leftSource = screenWidth / 2 + coef * width(-8.35, source);
+  const leftDest = screenWidth / 2 + coef * width(-8.35, destination);
 
   // window resize event listener
   window.onresize = () => {
@@ -180,12 +180,12 @@ const GameLogic = ({
 
   // path to load texture maps
   const toUrl = (type) => `${process.env.PUBLIC_URL}/assets/textures/${texture}/${type}.png`;
-  
+
   // --- Animation ---
   const indexShift = forward ? 0 : 1; // differentiate between forward and backward moves
-  const animationStep = animate ? 
-    animationSteps.current[animationIndex.current] : 
-    animationStepsCopy.current[currStep + indexShift] 
+  const animationStep = animate ?
+    animationSteps.current[animationIndex.current] :
+    animationStepsCopy.current[currStep + indexShift]
   // serves as a unique id for a valid move
   const moveAsString = JSON.stringify(animationStep + indexShift + currStep);
   const initialMove = prevMove.current !== moveAsString && currStep !== 0; // checks for initial move; prevents perpetual rendering
@@ -200,17 +200,17 @@ const GameLogic = ({
     <>
       <div className="content">
         <Canvas>
-          <spotLight position={[30, -20, -20]} intensity={0.8}/>
+          <spotLight position={[30, -20, -20]} intensity={0.8} />
           <spotLight position={[-30, 20, 20]} intensity={0.8} />
           <spotLight position={[-50, -40, 20]} intensity={0.8} />
-          <spotLight position={[50, 40, 20]} intensity={0.8} />          
-          <PerspectiveCamera makeDefault fov={45} aspect={0.5} position={[0,0,10]} near={1} far={20} />
+          <spotLight position={[50, 40, 20]} intensity={0.8} />
+          <PerspectiveCamera makeDefault fov={45} aspect={0.5} position={[0, 0, 10]} near={1} far={20} />
           <group scale={scale}>
             {/* initial Tower rendering */
               [...Array(numTowers)].map((_, index) =>
                 <Tower
                   key={index}
-                  position={[width(-8.1, index), -1, 0]} 
+                  position={[width(-8.1, index), -1, 0]}
                   toUrl={toUrl}
                   numDisks={numDisks}
                 />
@@ -218,20 +218,20 @@ const GameLogic = ({
             }
           </group>
           {/* Disk rendering (dependent on gameState) */
-            gameState.map((tower, towerIndex) => 
+            gameState.map((tower, towerIndex) =>
               <group key={towerIndex} scale={scale}>
-                {tower.map((radius, diskIndex) => 
+                {tower.map((radius, diskIndex) =>
                   <Disk
                     key={radius}
                     gameState={gameState}
                     changeGameState={changeGameState}
                     playRate={playRate}
-                    animateTo={diskIndex === tower.length-1 && towerIndex === from ? to : -1}
+                    animateTo={diskIndex === tower.length - 1 && towerIndex === from ? to : -1}
                     scale={scale}
                     numDisks={numDisks}
                     space={space}
                     towerIndex={towerIndex}
-                    position={[width(-8.1, towerIndex), -2 - numDisks/14 + 0.4*(diskIndex+1), 0]}
+                    position={[width(-8.1, towerIndex), -2 - numDisks / 14 + 0.4 * (diskIndex + 1), 0]}
                     radius={radius}
                     toUrl={toUrl}
                     procedure={procedure}
@@ -243,12 +243,12 @@ const GameLogic = ({
           }
         </Canvas>
       </div>
-      {/* labels source and destination tower */ }
-      <div className="icon" style={{ color: "LightSeaGreen", bottom: bottom, left: leftSource}}>
-        <FaChevronUp size={`${2*coef/60.75}em`}/>
-      </div>   
-      <div className="icon" style={{ color: "LightSeaGreen", bottom: bottom, left: leftDest}}>
-        <FaChevronDown size={`${2*coef/60.75}em`}/>
+      {/* labels source and destination tower */}
+      <div className="icon" style={{ color: "LightSeaGreen", bottom: bottom, left: leftSource }}>
+        <FaChevronUp size={`${2 * coef / 60.75}em`} />
+      </div>
+      <div className="icon" style={{ color: "LightSeaGreen", bottom: bottom, left: leftDest }}>
+        <FaChevronDown size={`${2 * coef / 60.75}em`} />
       </div>
     </>
   );

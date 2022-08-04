@@ -1,6 +1,6 @@
 # towers-of-hanoi
 Animation and puzzle game based on the Towers of Hanoi problem created using React.js.
-[Site](https://vjiang10.github.io/towers-of-hanoi/).
+[Site](https://towers-of-hanoi-4d72b.web.app/).
 
 App contains background image state, updated from sidebar (state passed down?).
 Sidebar changes rendering variables, passes arguments to game logic, which sets up animation, sound, and disc and tower states and rules. Animation (including dropping the discs) should be passed props for sound based on material of the disc and towers.
@@ -14,7 +14,7 @@ Supports zooming and and zooming out. Testing for mobile compatibility.
 
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://towers-of-hanoi-4d72b.web.app/).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 

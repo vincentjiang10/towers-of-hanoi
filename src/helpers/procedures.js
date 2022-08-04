@@ -4,8 +4,8 @@
 export const isValidMove = (gameState, procedure, from, to) => {
 	return commonCheck(gameState, from, to) && (
 		procedure <= 1 ? true :
-		procedure === 2 ? adjacentCheck(from, to) : 
-		false
+			procedure === 2 ? adjacentCheck(from, to) :
+				false
 	);
 }
 
@@ -15,7 +15,7 @@ const commonCheck = (gameState, from, to) => {
 	const toTower = gameState[to];
 	return (
 		from !== to && (
-			toTower.length === 0 || 
+			toTower.length === 0 ||
 			radius < toTower.at(-1) ||
 			radius - toTower.at(-1) < 0.002
 		)
@@ -29,13 +29,13 @@ const adjacentCheck = (from, to) => {
 
 // checks for winning condition
 export const winCondition = (procedure, numDisks, sourceTower, destTower) => {
-	return procedure === 1 ? 
-		bicolorWinCondition(numDisks, sourceTower, destTower) : 
+	return procedure === 1 ?
+		bicolorWinCondition(numDisks, sourceTower, destTower) :
 		commonWinCondition(numDisks, destTower);
 }
 
 // checks for common win condition (all disks at destTower)
-const commonWinCondition = (numDisks, destTower) => 
+const commonWinCondition = (numDisks, destTower) =>
 	destTower && destTower.length === numDisks;
 
 // checks for winning condition based on bicolor puzzle rules
@@ -45,14 +45,14 @@ const bicolorWinCondition = (numDisks, sourceTower, destTower) => {
 	const patternCheck = () => {
 		let isWin = true;
 		sourceTower && sourceTower.forEach((radius, index) => {
-			const compare = (0.7-0.38*index/(numDisks-1) - (index%2 ? 0 : 0.001));
+			const compare = (0.7 - 0.38 * index / (numDisks - 1) - (index % 2 ? 0 : 0.001));
 			isWin = isWin && Math.abs(radius - compare) < 0.0001;
 		});
 		return isWin;
 	}
-	
+
 	return (
-		sourceTower && 
+		sourceTower &&
 		destTower &&
 		sourceTower.length === numDisks &&
 		destTower.length === numDisks &&

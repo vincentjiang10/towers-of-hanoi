@@ -2,16 +2,16 @@ import React, { useState, useRef } from "react";
 import useSound from "use-sound";
 import 'antd/dist/antd.css';
 import { Carousel } from "antd";
-import { 
-  FaChevronLeft, 
-  FaChevronRight, 
-  FaChevronDown, 
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaChevronDown,
   FaChevronUp,
   FaGripLines,
   FaGripLinesVertical,
   FaPlay,
   FaPause,
-  FaRedo, 
+  FaRedo,
   FaGithub
 } from "react-icons/fa";
 import { IoMdHelp, IoMdMore, IoMdInformationCircleOutline } from "react-icons/io";
@@ -67,15 +67,15 @@ export const IntroModal = ({ opaque }) => {
   // sets cooldown for arrows
   const setCooldown = () => {
     const cooldown = async () => {
-			await new Promise(() => {
-				setTimeout(() => {setArrowDisabled(false)}, 1000);
-			});
-		}
+      await new Promise(() => {
+        setTimeout(() => { setArrowDisabled(false) }, 1000);
+      });
+    }
     setArrowDisabled(true);
     click();
     cooldown();
   }
-  
+
   return (
     <div className="introModal">
       <Carousel ref={carousel} infinite={false}>
@@ -92,7 +92,7 @@ export const IntroModal = ({ opaque }) => {
                 <ul>
                   <li>Never moving a larger disk on top of a smaller one</li>
                   <li>Only moving one disk at a time</li>
-                  <li>Move all disks from the source (<FaChevronUp style={iconStyle} />) tower to the destination (<FaChevronDown style={iconStyle}/>) tower</li>
+                  <li>Move all disks from the source (<FaChevronUp style={iconStyle} />) tower to the destination (<FaChevronDown style={iconStyle} />) tower</li>
                 </ul>
               </div>
               <div style={sectionStyle}>
@@ -113,16 +113,16 @@ export const IntroModal = ({ opaque }) => {
                 <ul>
                   <li>The <b>puzzle rules</b> (<IoMdMore size="1.2em" style={iconStyle} />) and type</li>
                   <li>The number of <b>towers</b> (<FaGripLinesVertical style={iconStyle} />) and <b>disks</b> (<FaGripLines style={iconStyle} />) to be set</li>
-                  <li>The <b>source</b> (<FaChevronUp style={iconStyle} />) and <b>destination</b> (<FaChevronDown style={iconStyle}/>) towers</li>
+                  <li>The <b>source</b> (<FaChevronUp style={iconStyle} />) and <b>destination</b> (<FaChevronDown style={iconStyle} />) towers</li>
                   <li>The <b>background theme</b> (<AiFillPicture style={iconStyle} />) and <b>material</b> (<AiTwotoneEdit style={iconStyle} />) image</li>
                   <li>To <b>animate</b> (<FaPlay size="0.7em" style={iconStyle} />)</li>
                 </ul>
               </div>
               <div style={sectionStyle}>
-                In <b>Rules and Variants</b> (<IoMdMore size="1.2em" style={iconStyle} />), hover over the info (<IoMdInformationCircleOutline size="1.2em" style={iconStyle} />) 
-                icons to take a look at the rules for each puzzle. 
-                Hovering over each item in the sidebar will offer a description of usage. 
-                <b> Reset</b> (<FaRedo size="0.8em" style={iconStyle} />) will enable you to reset the puzzle to the original state.  
+                In <b>Rules and Variants</b> (<IoMdMore size="1.2em" style={iconStyle} />), hover over the info (<IoMdInformationCircleOutline size="1.2em" style={iconStyle} />)
+                icons to take a look at the rules for each puzzle.
+                Hovering over each item in the sidebar will offer a description of usage.
+                <b> Reset</b> (<FaRedo size="0.8em" style={iconStyle} />) will enable you to reset the puzzle to the original state.
               </div>
             </div>
           </div>
@@ -138,7 +138,7 @@ export const IntroModal = ({ opaque }) => {
               <div style={sectionStyle}>
                 <b>Animate</b> (<FaPlay size="0.7em" style={iconStyle} />) supports two types of disk animations: <br />
                 <ul>
-                  <li>Moving the disks on pause, which moves one disk at a time by clicking forward (<FaChevronRight style={iconStyle}/>) or backward (<FaChevronLeft style={iconStyle}/>)</li>
+                  <li>Moving the disks on pause, which moves one disk at a time by clicking forward (<FaChevronRight style={iconStyle} />) or backward (<FaChevronLeft style={iconStyle} />)</li>
                   <li>Moving the disks on play, which plays the solution animation</li>
                 </ul>
                 <b>Note: Animate</b> (<FaPlay size="0.7em" style={iconStyle} />) is currently only available for puzzles with 3 towers.
@@ -161,10 +161,10 @@ export const IntroModal = ({ opaque }) => {
             <div className="body">
               <div style={sectionStyle}>
                 You may choose to sign in with Google on the top right. <br />
-                <img src={`${process.env.PUBLIC_URL}/assets/images/signIn.jpg`} alt="sign in and levels" style={imageStyle}/>
+                <img src={`${process.env.PUBLIC_URL}/assets/images/signIn.jpg`} alt="sign in and levels" style={imageStyle} />
                 This will enable <b>Levels</b> to store the levels you have completed and the number of moves you used to complete the levels.
                 The puzzle levels shown will depend on the selected puzzle in <b>Rules and Variants</b> (<IoMdMore size="1.2em" style={iconStyle} />).
-                Keep in mind, the use of <b>Animate</b> (<FaPlay size="0.7em" style={iconStyle} />) will not count towards level completion: A level can only be completed by manually dragging the disks. 
+                Keep in mind, the use of <b>Animate</b> (<FaPlay size="0.7em" style={iconStyle} />) will not count towards level completion: A level can only be completed by manually dragging the disks.
               </div>
             </div>
           </div>
@@ -175,15 +175,15 @@ export const IntroModal = ({ opaque }) => {
             <div className="heading">Enjoy!</div>
             <div className="body">
               <div style={sectionStyle}>
-              Restart this tutorial anytime by clicking the <b>Help</b> (<IoMdHelp style={iconStyle} />) option on the sidebar. <br />
-              You can also view the source code for this project by clicking <b>View Source</b> (<FaGithub style={iconStyle} />).
+                Restart this tutorial anytime by clicking the <b>Help</b> (<IoMdHelp style={iconStyle} />) option on the sidebar. <br />
+                You can also view the source code for this project by clicking <b>View Source</b> (<FaGithub style={iconStyle} />).
               </div>
             </div>
           </div>
         </div>
       </Carousel>
       <FaChevronLeft className="leftArrow"
-        {...arrowStyle} 
+        {...arrowStyle}
         style={opaque(arrowDisabled)}
         onClick={() => {
           carousel.current.prev();
@@ -196,9 +196,9 @@ export const IntroModal = ({ opaque }) => {
         onClick={() => {
           carousel.current.next();
           setCooldown();
-        }} 
+        }}
       />
-      <div className="close" 
+      <div className="close"
         onClick={() => {
           const closeModal = async () => {
             await new Promise(() => {
@@ -233,32 +233,32 @@ export const WinModal = () => {
         </div>
         <div className="body">
           <div style={sectionStyle}>
-          Feel free to navigate the sidebar to set another puzzle configuration or click <b>Reset </b> <br />
-          (<FaRedo size="0.8em" style={iconStyle} /> ) to reset the current puzzle.
-          Click on <b>Levels</b> on the top right corner to try another level 
-          (if you are signed in, you should see the updated number of moves for the current level).
-          You can also switch the puzzle type in <b>Rules and Variants </b> 
-          (<IoMdMore size="1.2em" style={iconStyle} />) on the sidebar.
+            Feel free to navigate the sidebar to set another puzzle configuration or click <b>Reset </b> <br />
+            (<FaRedo size="0.8em" style={iconStyle} /> ) to reset the current puzzle.
+            Click on <b>Levels</b> on the top right corner to try another level
+            (if you are signed in, you should see the updated number of moves for the current level).
+            You can also switch the puzzle type in <b>Rules and Variants </b>
+            (<IoMdMore size="1.2em" style={iconStyle} />) on the sidebar.
           </div>
         </div>
       </div>
-      <div className="close" 
-          onClick={() => {
-            const closeModal = async () => {
-              await new Promise(() => {
-                setTimeout(() => {
-                  document.getElementsByClassName("overlay")[0].style.display = "none";
-                  document.getElementsByClassName("winModal")[0].style.display = "none";
-                  click();
-                }, 0);
-              });
-            }
-            closeModal();
-          }}
-          style={{ bottom: "400px" }}
-        >
-          &times;
-        </div>
+      <div className="close"
+        onClick={() => {
+          const closeModal = async () => {
+            await new Promise(() => {
+              setTimeout(() => {
+                document.getElementsByClassName("overlay")[0].style.display = "none";
+                document.getElementsByClassName("winModal")[0].style.display = "none";
+                click();
+              }, 0);
+            });
+          }
+          closeModal();
+        }}
+        style={{ bottom: "400px" }}
+      >
+        &times;
+      </div>
     </div>
   )
 }
