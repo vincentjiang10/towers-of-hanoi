@@ -112,6 +112,16 @@
 	position: absolute;
 }
 
+.introModal .heading {
+	font-size: 20px;
+	text-align: center;
+}
+
+.introModal .body {
+	padding: 0px 50px;
+	font-size: 14px;
+}
+
 .leftArrow {
 	bottom: 220px;
 	position: relative;
@@ -216,7 +226,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.3); 
+  background-color: rgba(0,0,0,0.5); 
   z-index: 1500;
 }
 
