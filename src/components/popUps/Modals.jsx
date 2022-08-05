@@ -19,7 +19,7 @@ import { AiFillPicture, AiTwotoneEdit } from "react-icons/ai";
 
 // styling for content
 const contentStyle = {
-  height: "400px",
+  height: "450px",
   color: "#fff",
   lineHeight: "30px",
   background: "#1d1d1d",
@@ -114,7 +114,7 @@ export const IntroModal = ({ opaque }) => {
                   <li>The <b>puzzle rules</b> (<IoMdMore size="1.2em" style={iconStyle} />) and type</li>
                   <li>The number of <b>towers</b> (<FaGripLinesVertical style={iconStyle} />) and <b>disks</b> (<FaGripLines style={iconStyle} />) to be set</li>
                   <li>The <b>source</b> (<FaChevronUp style={iconStyle} />) and <b>destination</b> (<FaChevronDown style={iconStyle} />) towers</li>
-                  <li>The <b>background theme</b> (<AiFillPicture style={iconStyle} />) and <b>material</b> (<AiTwotoneEdit style={iconStyle} />) image</li>
+                  <li>The <b>background theme</b> (<AiFillPicture style={iconStyle} />) and <b>material</b> (<AiTwotoneEdit style={iconStyle} />)</li>
                   <li>To <b>animate</b> (<FaPlay size="0.7em" style={iconStyle} />)</li>
                 </ul>
               </div>
@@ -163,8 +163,9 @@ export const IntroModal = ({ opaque }) => {
                 You may choose to sign in with Google on the top right. <br />
                 <img src={`${process.env.PUBLIC_URL}/assets/images/signIn.jpg`} alt="sign in and levels" style={imageStyle} />
                 This will enable <b>Levels</b> to store the levels you have completed and the number of moves you used to complete the levels.
-                The puzzle levels shown will depend on the selected puzzle in <b>Rules and Variants</b> (<IoMdMore size="1.2em" style={iconStyle} />).
-                Keep in mind, the use of <b>Animate</b> (<FaPlay size="0.7em" style={iconStyle} />) will not count towards level completion: A level can only be completed by manually dragging the disks.
+                The puzzle levels shown will depend on the selected puzzle in <b>Rules and Variants</b> (<IoMdMore size="1.2em" style={iconStyle} />).<br />
+                <br />
+                <b> Note:</b> The use of <b>Animate</b> (<FaPlay size="0.7em" style={iconStyle} />) will not count towards level completion: A level can only be completed by manually dragging the disks.
               </div>
             </div>
           </div>
@@ -212,7 +213,7 @@ export const IntroModal = ({ opaque }) => {
           carousel.current.goTo(0, true);
           closeModal();
         }}
-        style={{ bottom: "425px" }}
+        style={{ bottom: "475px" }}
       >
         &times;
       </div>
@@ -233,12 +234,12 @@ export const WinModal = () => {
         </div>
         <div className="body">
           <div style={sectionStyle}>
-            Feel free to navigate the sidebar to set another puzzle configuration or click <b>Reset </b> <br />
-            (<FaRedo size="0.8em" style={iconStyle} /> ) to reset the current puzzle.
+            Feel free to navigate the sidebar to set another puzzle configuration or click <b>Reset </b>
+            (<FaRedo size="0.8em" style={iconStyle} />) to reset the current puzzle.
             Click on <b>Levels</b> on the top right corner to try another level
-            (if you are signed in, you should see the updated number of moves for the current level).
+            (if you are signed in and have not used <b>Animate</b> (<FaPlay size="0.7em" style={iconStyle} />) for this level, you should see the updated number of moves for the current level).
             You can also switch the puzzle type in <b>Rules and Variants </b>
-            (<IoMdMore size="1.2em" style={iconStyle} />) on the sidebar.
+            (<IoMdMore size="1.2em" style={iconStyle} />).
           </div>
         </div>
       </div>
@@ -255,7 +256,7 @@ export const WinModal = () => {
           }
           closeModal();
         }}
-        style={{ bottom: "400px" }}
+        style={{ bottom: "445px" }}
       >
         &times;
       </div>

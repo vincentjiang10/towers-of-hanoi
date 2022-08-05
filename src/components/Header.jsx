@@ -9,6 +9,8 @@ import useSound from "use-sound";
 
 const Header = ({
   procedure,
+  numTowers,
+  numDisks,
   setNumTowers,
   setNumDisks,
   handlePause,
@@ -82,6 +84,8 @@ const Header = ({
         dropDown={dropDown}
         procedureObj={userData ? userData[procedure.toLowerCase()] : false}
         procedure={procedure}
+        numDisks={numDisks}
+        numTowers={numTowers}
         setNumTowers={setNumTowers}
         setNumDisks={setNumDisks}
         setSource={setSource}
@@ -97,6 +101,8 @@ const Levels = ({
   dropDown,
   procedureObj,
   procedure,
+  numTowers,
+  numDisks,
   setNumTowers,
   setNumDisks,
   setSource,
@@ -105,26 +111,39 @@ const Levels = ({
   click
 }) => {
   // button style if level completed
-  const completedButton = () => {
+  const completedButton = (isSelected) => {
     return {
-      color: "#3d3d3d",
-      backgroundColor: "lightseagreen"
+      color: isSelected ? "royalblue" : "#3d3d3d",
+      backgroundColor: isSelected ? "lightblue" : "lightseagreen"
     }
   }
+
+  // button style if selected
+  const selectedButton = (isSelected) => {
+    return isSelected ? 
+      {
+        color: "royalblue", 
+        backgroundColor: "lightblue"
+      } :
+      {}
+  }
+
   // handles button click 
   const handleClick = (numDisks, numTowers) => {
     const delaySet = async () => {
       await new Promise(() => {
         setTimeout(() => {
-          setSource(0);
-          setDestination(numTowers - 1);
+          setNumDisks(numDisks);
+          setNumTowers(numTowers);
+          
         }, 0);
       });
     }
     click();
+    setSource(0);
+    setDestination(numTowers - 1);
     handlePause();
-    setNumDisks(numDisks);
-    setNumTowers(numTowers);
+    
     delaySet();
   }
 
@@ -160,7 +179,13 @@ const Levels = ({
                   onClick={() => { handleClick(7 - diskIndex, towerIndex + 3) }}
                   style={
                     procedureObj ?
-                      (procedureObj.hasOwnProperty(`${7 - diskIndex}${towerIndex + 3}`) ? completedButton() : {}) : {}
+                      (
+                        procedureObj.hasOwnProperty(`${7 - diskIndex}${towerIndex + 3}`) ? 
+                          completedButton(7 - diskIndex === numDisks && numTowers === towerIndex + 3) : 
+                          selectedButton(7 - diskIndex === numDisks && numTowers === towerIndex + 3)
+                      ) 
+                      : 
+                      selectedButton(7 - diskIndex === numDisks && numTowers === towerIndex + 3)
                   }
                 >
                   <div>

@@ -448,6 +448,8 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 
       <Header
         procedure={procedures[procedure]}
+        numTowers={numTowers}
+        numDisks={numDisks}
         setNumTowers={setNumTowers}
         setNumDisks={setNumDisks}
         setSource={setSource}

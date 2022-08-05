@@ -127,9 +127,20 @@ const GameLogic = ({
 
     // checking for win condition
     winCondition(procedure, numDisks, gameState[source], gameState[destination]) ?
-      winEffect() :
+      source !== destination && winEffect() :
       (animate && animationIndex.current <= 2) || numRenders.current < 5 || sound();
-  }, [gameState, destination]);
+  }, [gameState]);
+
+  useEffect(() => {
+    // update animation information
+    if (!animate) animationSteps.current = getAnimationSteps(procedure, gameState, initDisks, source, destination);
+    else {
+      animationIndex.current++;
+      animationStepsCopy.current = getAnimationSteps(procedure, gameState, initDisks, source, destination);
+      animationStepsCopy.current.shift();
+      setNumMoves(Math.max(animationStepsCopy.current.length - 1, 0));
+    }
+  }, [destination])
 
   // solution animation
   useEffect(() => {
