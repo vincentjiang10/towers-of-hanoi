@@ -120,9 +120,9 @@ const Levels = ({
 
   // button style if selected
   const selectedButton = (isSelected) => {
-    return isSelected ? 
+    return isSelected ?
       {
-        color: "royalblue", 
+        color: "royalblue",
         backgroundColor: "lightblue"
       } :
       {}
@@ -135,7 +135,7 @@ const Levels = ({
         setTimeout(() => {
           setNumDisks(numDisks);
           setNumTowers(numTowers);
-          
+
         }, 0);
       });
     }
@@ -143,7 +143,7 @@ const Levels = ({
     setSource(0);
     setDestination(numTowers - 1);
     handlePause();
-    
+
     delaySet();
   }
 
@@ -180,11 +180,11 @@ const Levels = ({
                   style={
                     procedureObj ?
                       (
-                        procedureObj.hasOwnProperty(`${7 - diskIndex}${towerIndex + 3}`) ? 
-                          completedButton(7 - diskIndex === numDisks && numTowers === towerIndex + 3) : 
+                        procedureObj.hasOwnProperty(`${7 - diskIndex}${towerIndex + 3}`) ?
+                          completedButton(7 - diskIndex === numDisks && numTowers === towerIndex + 3) :
                           selectedButton(7 - diskIndex === numDisks && numTowers === towerIndex + 3)
-                      ) 
-                      : 
+                      )
+                      :
                       selectedButton(7 - diskIndex === numDisks && numTowers === towerIndex + 3)
                   }
                 >
