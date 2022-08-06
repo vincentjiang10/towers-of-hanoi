@@ -4,7 +4,6 @@
 This project was inspired by and based on the Towers of Hanoi puzzle and its variants. The recursive nature of the towers puzzle motivated me to create this web application to animate, visualize, and interact with the different puzzle configurations. You can visit the site [here](https://towers-of-hanoi-4d72b.web.app/). Google Chrome is recommended. 
 
 ## Puzzle Types and Rules
----
 ### Standard
 **Rules:**
 1. Larger disks cannot be placed on top of smaller disks
@@ -14,6 +13,7 @@ This project was inspired by and based on the Towers of Hanoi puzzle and its var
 1. Move all disks from the source tower to the destination tower
 
 **Preview:**
+![Standard Solution Animation](gifs/StandardAnimation.gif)
 
 ---
 ### Bicolor
@@ -26,6 +26,7 @@ This project was inspired by and based on the Towers of Hanoi puzzle and its var
 2. Make both towers monochrome: cyan for source tower and light blue for tower
 
 **Preview:**
+![Bicolor Solution Animation](gifs/BicolorAnimation.gif)
 
 ---
 ### Adjacent
@@ -38,8 +39,8 @@ This project was inspired by and based on the Towers of Hanoi puzzle and its var
 1. Move all disks from the source tower to the destination tower
 
 **Preview:**
+![Adjacent Solution Animation](gifs/AdjacentAnimation.gif)
 
----
 ## Features
 The application contains many features, including changing the **puzzle type and rules**, setting the **number of towers and disks**, and changing the **source tower** (the starting tower for disks) and **destination tower**. Other miscellaneous options include changing the **background theme** and the rendered **material** for the disks and towers. The **animation** feature allows you to visualize the recursive behavior of the puzzle solution. You can animate moves one at a time or simply let the solution animation play all the moves at a preffered rate. There is also a **levels** feature when signing in with Google in the application, which allows you to choose different puzzle levels and complete them. 
 
