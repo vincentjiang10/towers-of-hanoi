@@ -13,6 +13,7 @@ This project was inspired by and based on the Towers of Hanoi puzzle and its var
 1. Move all disks from the source tower to the destination tower
 
 **Preview:**
+  
 ![Standard Solution Animation](gifs/StandardAnimation.gif)
 
 ---
@@ -26,6 +27,7 @@ This project was inspired by and based on the Towers of Hanoi puzzle and its var
 2. Make both towers monochrome: cyan for source tower and light blue for tower
 
 **Preview:**
+  
 ![Bicolor Solution Animation](gifs/BicolorAnimation.gif)
 
 ---
@@ -39,6 +41,7 @@ This project was inspired by and based on the Towers of Hanoi puzzle and its var
 1. Move all disks from the source tower to the destination tower
 
 **Preview:**
+  
 ![Adjacent Solution Animation](gifs/AdjacentAnimation.gif)
 
 ## Features
