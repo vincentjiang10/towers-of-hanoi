@@ -55,6 +55,21 @@
 	top: 0px;
 	left: 0px;
 	position: absolute;
+	text-align: center;
+}
+
+.footer {
+	text-align: center;
+	width: 200px;
+	font-size: 10px;
+	color: lightgrey;
+	position: absolute;
+	bottom: 5px; 
+	left: calc(50vw - 60px);
+}
+
+.footer .heart {
+	color: rgb(194, 17, 17);
 }
 
 .footerButton {

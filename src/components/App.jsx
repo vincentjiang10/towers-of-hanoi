@@ -18,6 +18,9 @@ function App() {
           onBackgroundChange={(index) => setImage(index)}
         />
       </div>
+      <div className="footer">
+        Made with <span className="heart">&hearts;</span> by Vincent Jiang &copy; 2022
+      </div>
     </div>
   );
 }
