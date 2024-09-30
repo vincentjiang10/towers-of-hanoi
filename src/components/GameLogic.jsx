@@ -140,6 +140,7 @@ const GameLogic = ({
       animationStepsCopy.current.shift();
       setNumMoves(Math.max(animationStepsCopy.current.length - 1, 0));
     }
+    numRenders.current < 5 || sound();
   }, [destination])
 
   // solution animation
