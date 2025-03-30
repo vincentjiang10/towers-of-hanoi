@@ -2,13 +2,26 @@ import React, { useState, useRef, useEffect } from "react";
 import useSound from "use-sound";
 import { Canvas } from "@react-three/fiber";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
-import { PerspectiveCamera } from "@react-three/drei";
+import { PerspectiveCamera, OrbitControls, useProgress } from "@react-three/drei";
 import { winCondition } from "../helpers/procedures";
 import { auth, db } from "../helpers/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import getAnimationSteps from "../helpers/animation";
 import Disk from "./game/Disk";
 import Tower from "./game/Tower";
+import { useSpring, animated } from "@react-spring/three";
+import { useDrag } from "@use-gesture/react";
+
+// Loading progress component
+const LoadingProgress = ({ onProgress }) => {
+  const { progress } = useProgress();
+
+  useEffect(() => {
+    onProgress(progress);
+  }, [progress, onProgress]);
+
+  return null;
+};
 
 const GameLogic = ({
   procedure,
@@ -23,7 +36,8 @@ const GameLogic = ({
   currStep,
   setCurrStep,
   setNumMoves,
-  forward
+  forward,
+  onLoadingProgress
 }) => {
   // gameState is an array whose elements represent individual tower states
   // maintained as an array, similating stack, of Disk sizes (unique identifier)
@@ -207,11 +221,19 @@ const GameLogic = ({
   if (from === to && !animate) to = -1;
   prevMove.current = moveAsString;
 
+  // Track loading progress
+  useEffect(() => {
+    if (onLoadingProgress) {
+      onLoadingProgress(0); // Start at 0%
+    }
+  }, [onLoadingProgress]);
+
   // display the disks and towers acoording to gameState
   return (
     <>
       <div className="content">
         <Canvas>
+          <LoadingProgress onProgress={onLoadingProgress} />
           <ambientLight intensity={0.5} />
           <directionalLight position={[10, 10, 5]} intensity={1} />
           <spotLight position={[30, -20, -20]} intensity={0.5} />

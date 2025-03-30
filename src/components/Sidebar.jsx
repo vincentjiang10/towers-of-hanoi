@@ -39,7 +39,7 @@ import {
   MaterialTooltip,
   AnimateTooltip
 } from "./popUps/Tooltips"
-import { IntroModal, WinModal } from "./popUps/Modals";
+import { IntroModal, WinModal, LoadingModal } from "./popUps/Modals";
 import GameLogic from "./GameLogic";
 import Header from "./Header";
 
@@ -62,6 +62,9 @@ const Sidebar = ({ images, onBackgroundChange }) => {
   const [movesDisabled, setMovesDisabled] = useState(false);
   const numMoves = useRef(0);
   const [src, target] = useSingleton(); // tooltips
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingStatus, setLoadingStatus] = useState("Initializing game...");
+  const [isLoading, setIsLoading] = useState(true);
 
   // resets gameState
   const reset = (source) => {
@@ -172,6 +175,24 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 
   // array containing string elements representing choices for different types of game rules/procedures
   const procedures = ["Standard", "Bicolor", "Adjacent"];
+
+  // Update loading status based on progress
+  useEffect(() => {
+    if (loadingProgress < 30) {
+      setLoadingStatus("Loading game assets...");
+    } else if (loadingProgress < 60) {
+      setLoadingStatus("Initializing 3D scene...");
+    } else if (loadingProgress < 90) {
+      setLoadingStatus("Setting up game environment...");
+    } else if (loadingProgress >= 100) {
+      setLoadingStatus("Almost ready...");
+      // Add a small delay before hiding the loading modal
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [loadingProgress]);
 
   return (
     <>
@@ -439,8 +460,16 @@ const Sidebar = ({ images, onBackgroundChange }) => {
           setCurrStep={setCurrStep}
           setNumMoves={(moves) => { numMoves.current = moves }}
           forward={forward}
+          onLoadingProgress={setLoadingProgress}
         />
       </div>
+
+      {isLoading && (
+        <>
+          <div className="overlay" style={{ zIndex: 1650 }} />
+          <LoadingModal progress={loadingProgress} status={loadingStatus} />
+        </>
+      )}
 
       <IntroModal opaque={opaque} />
 

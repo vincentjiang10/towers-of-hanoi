@@ -263,3 +263,29 @@ export const WinModal = () => {
     </div>
   )
 }
+
+// Loading modal for tracking game loading progress
+export const LoadingModal = ({ progress, status }) => {
+  return (
+    <div className="loadingModal">
+      <div style={contentStyle}>
+        <br />
+        <div className="heading">Loading Game</div>
+        <div className="body">
+          <div style={sectionStyle}>
+            {status}
+          </div>
+          <div className="progressBar">
+            <div
+              className="progressBarFill"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <div className="progressText">
+            {progress}%
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -64,7 +64,7 @@
 	font-size: 10px;
 	color: lightgrey;
 	position: absolute;
-	bottom: 5px; 
+	bottom: 5px;
 	left: calc(50vw - 60px);
 }
 
@@ -114,9 +114,13 @@
 }
 
 @keyframes MoveUpDown {
-	0% { }
-	50% { transform: translateY(-20px); }
-	100% { }
+	0% {}
+
+	50% {
+		transform: translateY(-20px);
+	}
+
+	100% {}
 }
 
 .introModal {
@@ -236,14 +240,14 @@
 
 .overlay {
 	position: fixed;
-  height: 100vh;
-  width: 100vw; 
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5); 
-  z-index: 1500;
+	height: 100vh;
+	width: 100vw;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 1500;
 }
 
 .rightArrow {
@@ -309,4 +313,44 @@
 .winModal .body {
 	padding: 0px 50px;
 	font-size: 14px;
+}
+
+.loadingModal {
+	width: 50vw;
+	min-width: 600px;
+	top: calc(50vh - 225px);
+	left: min(25vw, calc(50vw - 300px));
+	z-index: 1700;
+	position: absolute;
+}
+
+.loadingModal .heading {
+	font-size: 20px;
+	text-align: center;
+}
+
+.loadingModal .body {
+	padding: 0px 50px;
+	font-size: 14px;
+}
+
+.loadingModal .progressBar {
+	width: 100%;
+	height: 20px;
+	background-color: #2b2b2b;
+	border-radius: 10px;
+	overflow: hidden;
+	margin-top: 20px;
+}
+
+.loadingModal .progressBarFill {
+	height: 100%;
+	background-color: lightseagreen;
+	transition: width 0.3s ease-in-out;
+}
+
+.loadingModal .progressText {
+	text-align: center;
+	margin-top: 10px;
+	color: lightseagreen;
 }
