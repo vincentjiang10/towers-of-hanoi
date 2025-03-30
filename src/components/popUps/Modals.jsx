@@ -63,6 +63,7 @@ export const IntroModal = ({ opaque }) => {
   const [click] = useSound(`${process.env.PUBLIC_URL}/assets/sounds/click.mp3`);
   const carousel = useRef(null);
   const [arrowDisabled, setArrowDisabled] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   // sets cooldown for arrows
   const setCooldown = () => {
@@ -78,7 +79,11 @@ export const IntroModal = ({ opaque }) => {
 
   return (
     <div className="introModal">
-      <Carousel ref={carousel} infinite={false}>
+      <Carousel
+        ref={carousel}
+        infinite={false}
+        beforeChange={(current, next) => setCurrentSlide(next)}
+      >
         <div>
           <div style={contentStyle}>
             <br />
@@ -183,22 +188,26 @@ export const IntroModal = ({ opaque }) => {
           </div>
         </div>
       </Carousel>
-      <FaChevronLeft className="leftArrow"
-        {...arrowStyle}
-        style={opaque(arrowDisabled)}
-        onClick={() => {
-          carousel.current.prev();
-          setCooldown();
-        }}
-      />
-      <FaChevronRight className="rightArrow"
-        {...arrowStyle}
-        style={opaque(arrowDisabled)}
-        onClick={() => {
-          carousel.current.next();
-          setCooldown();
-        }}
-      />
+      {currentSlide > 0 && (
+        <FaChevronLeft className="leftArrow"
+          {...arrowStyle}
+          style={opaque(arrowDisabled)}
+          onClick={() => {
+            carousel.current.prev();
+            setCooldown();
+          }}
+        />
+      )}
+      {currentSlide < 4 && (
+        <FaChevronRight className="rightArrow"
+          {...arrowStyle}
+          style={opaque(arrowDisabled)}
+          onClick={() => {
+            carousel.current.next();
+            setCooldown();
+          }}
+        />
+      )}
       <div className="close"
         onClick={() => {
           const closeModal = async () => {

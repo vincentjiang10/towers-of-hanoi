@@ -46,7 +46,7 @@ import Header from "./Header";
 const Sidebar = ({ images, onBackgroundChange }) => {
   // separate state for rendering options
   // game info
-  const [collapse, setCollapse] = useState(true);
+  const [collapse, setCollapse] = useState(false);
   const [procedure, setProcedure] = useState(0);
   const [numTowers, setNumTowers] = useState(3);
   const [numDisks, setNumDisks] = useState(3);

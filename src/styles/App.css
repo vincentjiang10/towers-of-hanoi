@@ -39,9 +39,10 @@
 	width: 10px;
 	color: lightseagreen !important;
 	font-size: 20px !important;
-	left: max(570px, calc(50vw - 30px));
+	right: 20px;
+	top: 20px;
 	z-index: 2000;
-	position: relative;
+	position: absolute;
 	cursor: pointer;
 }
 
@@ -143,8 +144,10 @@
 }
 
 .leftArrow {
-	bottom: 240px;
-	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+	left: 20px;
+	position: absolute;
 }
 
 .leftArrow:hover {
@@ -251,9 +254,10 @@
 }
 
 .rightArrow {
-	bottom: 240px;
-	left: max(545px, calc(50vw - 55px));
-	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 20px;
+	position: absolute;
 }
 
 .rightArrow:hover {
