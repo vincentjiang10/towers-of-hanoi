@@ -143,13 +143,24 @@ const Disk = ({
   // call to animate if animateTo !== -1
   animateTo !== -1 && animateMove(animateTo);
 
-  // loading texture maps
+  // loading texture maps with error handling
   const textureProps = useTexture({
     map: toUrl("map"),
     aoMap: toUrl("ao"),
     metalnessMap: toUrl("metallic"),
     normalMap: toUrl("normal"),
     roughnessMap: toUrl("roughness")
+  }, (textures) => {
+    // Ensure textures are properly loaded
+    Object.entries(textures).forEach(([key, texture]) => {
+      console.log(`Loading texture: ${key}`);
+      texture.needsUpdate = true;
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+    });
+  }, (error) => {
+    console.error('Error loading textures:', error);
   });
 
   // setting up circular shape
@@ -184,15 +195,19 @@ const Disk = ({
 
   return (
     <a.mesh {...spring} {...bind()}>
-      <extrudeBufferGeometry args={[circle, extrudeSettings]} />
-      <meshPhysicalMaterial
-        {...textureProps}
+      <extrudeGeometry args={[circle, extrudeSettings]} />
+      <meshStandardMaterial
+        map={textureProps.map}
         color={
           procedure === 1 ?
             (bicolorIndex % 2 === 0 ? "LightBlue" : "Cyan") :
             `rgb(${Math.round(500 * (0.7 - radius)) + 30}, ${Math.round(-200 * (radius - 0.4)) + 200}, 230))`
         }
         attach="material"
+        roughness={0.3}
+        metalness={0.2}
+        emissive="#000000"
+        emissiveIntensity={0}
       />
     </a.mesh>
   );

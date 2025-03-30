@@ -22,10 +22,9 @@
     "react-icons": "^4.4.0",
     "react-pro-sidebar": "^0.7.1",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.1",
     "sass": "^1.54.0",
     "serve": "^14.0.1",
-    "three": "^0.142.0",
+    "three": "^0.160.0",
     "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -55,6 +54,6 @@
     ]
   },
   "devDependencies": {
-    "react-scripts": "5.0.1"
+    "react-scripts": "^5.0.1"
   }
 }
