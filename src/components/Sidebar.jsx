@@ -65,6 +65,30 @@ const Sidebar = ({ images, onBackgroundChange }) => {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingStatus, setLoadingStatus] = useState("Initializing game...");
   const [isLoading, setIsLoading] = useState(true);
+  const sidebarRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Check if click is on a modal or overlay
+      const isModal = event.target.closest('.introModal') ||
+        event.target.closest('.winModal') ||
+        event.target.closest('.loadingModal') ||
+        event.target.closest('.overlay');
+
+      // Only collapse if clicking outside sidebar and not on a modal
+      if (sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        !collapse &&
+        !isModal) {
+        setCollapse(true);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [collapse]);
 
   // resets gameState
   const reset = (source) => {
@@ -196,9 +220,14 @@ const Sidebar = ({ images, onBackgroundChange }) => {
 
   return (
     <>
-      <ProSidebar collapsed={collapse}>
-        <IconContext.Provider value={{ color: "LightSeaGreen" }}>
-
+      <IconContext.Provider value={{ color: "LightSeaGreen", size: "1.5em" }}>
+        <ProSidebar
+          ref={sidebarRef}
+          collapsed={collapse}
+          collapsedWidth="80px"
+          width="250px"
+          style={{ background: "#1d1d1d" }}
+        >
           <SidebarHeader>
             <Menu iconShape="circle">
               <MenuItem icon={<FaCog />} onClick={() => { setCollapse(!collapse) }}>
@@ -441,8 +470,8 @@ const Sidebar = ({ images, onBackgroundChange }) => {
               </MenuItem>
             </Menu>
           </SidebarFooter>
-        </IconContext.Provider>
-      </ProSidebar>
+        </ProSidebar>
+      </IconContext.Provider>
 
       {/* passing some state as props to GameLogic */}
       <div onMouseDown={handlePause}>
